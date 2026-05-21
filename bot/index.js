@@ -57,8 +57,8 @@ const auth = async (req, res, next) => {
 };
 
 // Route mở giao diện quản trị (Đã bỏ xác thực chặn load file HTML, dùng JS tự xác thực)
-app.get('/BoCauHoi', (req, res) => res.sendFile(path.join(__dirname, 'BoCauHoi.html')));
-app.get('/BoCauHoi.html', (req, res) => res.sendFile(path.join(__dirname, 'BoCauHoi.html')));
+app.get('/BoCauHoi', (req, res) => res.sendFile(path.join(__dirname, 'Documents/BoCauHoi.html')));
+app.get('/BoCauHoi.html', (req, res) => res.sendFile(path.join(__dirname, 'Documents/BoCauHoi.html')));
 
 // Bảo mật toàn bộ dữ liệu API
 app.use('/api/qa', auth);
