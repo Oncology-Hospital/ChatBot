@@ -57,6 +57,8 @@ services:
       # Liên kết file logic để khi update Q&A qua thư mục máy chủ, Docker nhận ngay
       - ./bot/qa-data.json:/app/qa-data.json
       - ./bot/vectors.json:/app/vectors.json
+      - ./bot/test-page.html:/app/test-page.html
+      - ./bot/assets:/app/assets
 
 volumes:
   pg_data:
