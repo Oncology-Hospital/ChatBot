@@ -1,0 +1,623 @@
+[
+  {
+    "id": 1,
+    "category": "Imported",
+    "question": "Địa chỉ bệnh viện ?",
+    "variants": [],
+    "answer": "CƠ SỞ BÌNH THẠNH\r\n- Cổng 2: 06 Nguyễn Huy Lượng, Phường Bình Thạnh, Tp. Hồ Chí Minh\r\n- Cổng 3: 47 Nguyễn Huy Lượng, Phường Bình Thạnh, Tp. Hồ Chí Minh\r\nCƠ SỞ THỦ ĐỨC\r\n- Số 12 Đường 400, Phường Tăng Nhơn Phú, Tp. Hồ Chí Minh"
+  },
+  {
+    "id": 2,
+    "category": "Imported",
+    "question": "Số điện thoại liên hệ ?",
+    "variants": [],
+    "answer": "TỔNG ĐÀI BỆNH VIỆN: (028) 38433021 - (028) 36227722 \r\nTỔNG ĐÀI TƯ VẤN -  ĐẶT HẸN: 1900633465"
+  },
+  {
+    "id": 3,
+    "category": "Imported",
+    "question": "Website bệnh viện ?",
+    "variants": [],
+    "answer": "https://benhvienungbuou.vn"
+  },
+  {
+    "id": 4,
+    "category": "Imported",
+    "question": "Lịch khám bệnh ?",
+    "variants": [],
+    "answer": "TỪ THỨ HAI - THỨ SÁU:\r\n- Sáng: 5h00 - 7h30; 7h30 - 12h00\r\n- Chiều: 13h00 - 16h30; 16h30 - 19h00 (Tại cơ sở Bình Thạnh)\r\nTHỨ BẢY - CHỦ NHẬT\r\n- Từ 7h30 -11h30\r\n- Cơ sở 2 - Thủ Đức chỉ hoạt động sáng Thứ Bảy\r\nCẤP CỨU HOẠT ĐỘNG 24/7"
+  },
+  {
+    "id": 5,
+    "category": "Imported",
+    "question": "Hướng dẫn đặt lịch khám bệnh trước ?",
+    "variants": [],
+    "answer": "TỔNG ĐÀI 1900636223\r\n- Thời gian hoạt động: \r\n+ Từ 6h00 - 17h00 từ Thứ Hai - Thứ Sáu\r\n+ 7h30 - 11h30 và 13h00 - 16h30 Thứ Bảy và Chủ nhật.\r\n- Chi phí đặt hẹn: 10,000/1 lượt đăng ký\r\n- Chi phí cuộc gọi: 1,000 vnđ/1 phút\r\n- Đối tượng đăng ký: khám dịch vụ, khám bảo hiểm y tế\r\n- Hình thức đặt hẹn: cấp số thứ tự phòng khám.\r\n- Thanh toán chi phí trực tiếp tại bệnh viện vào ngày khám.\r\n- Áp dụng cho cả 2 cơ sở.\r\nỨNG DỤNG ĐẶT KHÁM \" BVUB - HẸN KHÁM\" VÀ YOUMED\r\n- Cách thức đăng ký: tải ứng ụng trên CH PLAY hoặc APP STORE để đăng ký\r\n- Hình thức: thanh toán qua chuyển khoản ngân hàng\r\n- Áp dụng cho cơ sở Bình Thạnh.\r\nĐĂNG KÝ QUA KÊNH ZALO OA BỆNH VIỆN UNG BƯỚU TP. HỒ CHÍ MINH\r\n- Cách thức đăng ký: tìm kiếm kênh Zalo OA \"Bệnh viện Ung Bướu Tp. Hồ Chí Minh\" -> Bấm Quan tâm -> Nhắn tin đặt hẹn khám -> Chờ phản hồi từ nhân viên chăm sóc khách hàng bệnh viện.\r\n- Chi phí khám thanh toán trực tiếp tại bệnh viện\r\n- Áp dụng cho cả 2 cơ sở."
+  },
+  {
+    "id": 6,
+    "category": "Imported",
+    "question": "Các hình thức khám tại Bệnh viện Ung Bướu ?",
+    "variants": [],
+    "answer": "KHÁM BẢO HIỂM Y TẾ\r\n1. Phiếu chuyển cơ sở khám chữa bệnh bảo hiểm y tế hợp lệ (trừ một số mặt bệnh được quy định tại Phụ lục 1 Thông tư số 01/TT-BYT Ngày 01/01/2025) hoặc phiếu hẹn khám lại được Bệnh viện Ung Bướu cấp trước đó (còn giá trị sử dụng)\r\n2. Xuất trình thông tin về thẻ bảo hiểm y tế theo một trong các trường hợp sau đây:\r\nTH1: Thẻ bảo hiểm y tế hoặc mã số bảo hiểm y tế; trường hợp thẻ bảo hiểm y tế chưa có ảnh thì phải xuất trình thêm một trong các giấy tờ tùy thân có ảnh: căn cước, căn cước công dân, giấy chứng nhận căn cước, hộ chiếu, tài khoản định danh điện tử mức độ 2 trên ứng dụng VNelD hoặc giấy tờ chứng minh nhân thân khác do cơ quan, tổ chức có thẩm quyền cấp hoặc giấy xác nhận của công an cấp xã hoặc giấy tờ khác có xác nhận của cơ sở giáo dục nơi quản lý học sinh, sinh viên;\r\nTH2: Căn cước hoặc căn cước công dân hoặc tài khoản định danh điện tử mức độ 2 trên ứng dụng VNelD đã tích hợp thông tin về thẻ bảo hiểm y tế."
+  },
+  {
+    "id": 7,
+    "category": "Imported",
+    "question": "Các hình thức thanh toán tại bệnh viện ?",
+    "variants": [],
+    "answer": "Các hình thức thanh toán tại Bệnh viện Ung Bướu:\r\n- Tiền mặt\r\n- Chuyển khoản qua QR trực tiếp tại quầy thanh toán\r\n- Quét thẻ ngân hàng (ghi nợ, tín dụng) trực tiếp tại quầy thanh toán\r\n- Sử dụng thẻ khám bệnh có chức năng thanh toán"
+  },
+  {
+    "id": 8,
+    "category": "Imported",
+    "question": "Khám ở cơ sở nào tốt hơn ?",
+    "variants": [],
+    "answer": "Hiện BVUB đang tiếp nhận khám và điều trị tại 2 cơ sở Bình Thạnh và Thủ Đức. Anh/chị có thể đăng ký khám tại 1 trong 2 cơ sở. Trường hợp cần nhập viện điều trị, bác sĩ sẽ hướng dẫn và đề nghị chuyển anh chị về cơ sở phù hợp."
+  },
+  {
+    "id": 9,
+    "category": "Imported",
+    "question": "Cần chuẩn bị gì khi đi khám bệnh tại BVUB ?",
+    "variants": [],
+    "answer": "Khi đến khám tại Bệnh viện Ung Bướu, người bệnh cần chuẩn bị:\r\n- Căn cước/Căn cước công dân/ định danh mức 2\r\n- Kết quả khám chữa bệnh trước đó (nếu có)\r\n- Các giấy tờ cần thiết khi khám theo BHYT: \r\n1. Phiếu chuyển cơ sở khám chữa bệnh bảo hiểm y tế hợp lệ (trừ một số mặt bệnh được quy định tại Phụ lục 1 Thông tư số 01/TT-BYT Ngày 01/01/2025) hoặc phiếu hẹn khám lại được Bệnh viện Ung Bướu cấp trước đó (còn giá trị sử dụng)\r\n2. Xuất trình thông tin về thẻ bảo hiểm y tế theo một trong các trường hợp sau đây:\r\nTH1: Thẻ bảo hiểm y tế hoặc mã số bảo hiểm y tế; trường hợp thẻ bảo hiểm y tế chưa có ảnh thì phải xuất trình thêm một trong các giấy tờ tùy thân có ảnh: căn cước, căn cước công dân, giấy chứng nhận căn cước, hộ chiếu, tài khoản định danh điện tử mức độ 2 trên ứng dụng VNelD hoặc giấy tờ chứng minh nhân thân khác do cơ quan, tổ chức có thẩm quyền cấp hoặc giấy xác nhận của công an cấp xã hoặc giấy tờ khác có xác nhận của cơ sở giáo dục nơi quản lý học sinh, sinh viên;\r\nTH2: Căn cước hoặc căn cước công dân hoặc tài khoản định danh điện tử mức độ 2 trên ứng dụng VNelD đã tích hợp thông tin về thẻ bảo hiểm y tế."
+  },
+  {
+    "id": 10,
+    "category": "Imported",
+    "question": "Đến nhập viện điều trị vào thời gian nào ?",
+    "variants": [],
+    "answer": "- Trường hợp cấp cứu: 24/7\r\n- Ngoài tình huống cấp cứu: Thủ tục nhập viện được thực hiện trong giờ hành chính từ 7h30 - 12h00 và 13h00 - 16h30 từ Thứ Hai - Thứ Sáu (trừ ngày Lễ, tết)."
+  },
+  {
+    "id": 11,
+    "category": "Imported",
+    "question": "Đặt khám theo bác sĩ, khám chuyên gia ?",
+    "variants": [],
+    "answer": "Hiện tại Bệnh viện Ung Bướu chưa triển khai hình thức đăng ký khám theo bác sĩ, khám theo chuyên gia. Bạn có thể tham khảo thêm khung giờ khám và hình thức khám bên dưới để có sự lựa chọn phù hợp. (Ad thêm nội dung về lịch làm việc, hình thức khám, chi phí khám)"
+  },
+  {
+    "id": 12,
+    "category": "Imported",
+    "question": "Người bệnh đang điều trị tại Bệnh viện Ung Bướu, muốn chuyển đến cơ sở khám bệnh khác điều trị ?",
+    "variants": [],
+    "answer": "Trong trường hợp bệnh lý không phù hợp chuyên môn điều trị, Bệnh viện sẽ chủ động chuyển người bệnh đến cơ sở phù hợp theo đúng quy định. Ngược lại, trong trường hợp thuộc phạm vi chuyên môn, bệnh viện sẽ không chủ động chuyển cơ sở khám bệnh trừ trường hợp người bệnh đề nghị kết thúc điều trị/bỏ điều trị để chuyển sang cơ sở khác. Trân trọng./."
+  },
+  {
+    "id": 13,
+    "category": "Imported",
+    "question": "Bệnh viện Ung Bướu có khám cho trẻ từ 15 tuổi trở xuống ?",
+    "variants": [],
+    "answer": "Bệnh viện Ung Bướu là bệnh viện chuyên khoa khám và điều trị các bệnh lý về ung bướu và ung thư. Hiện bệnh viện có tiếp nhận khám, điều trị ung bướu, ung thư cho trẻ từ 15 tuổi trở xuống. \r\nTrong quá trình thăm khám, nếu tình trạng của trẻ không phù hợp phạm vi chuyên môn của bệnh viện, bác sĩ sẽ tư vấn và giới thiệu trẻ đến các bệnh viện chuyên khoa về nhi."
+  },
+  {
+    "id": 14,
+    "category": "Imported",
+    "question": "Bệnh viện Ung Bướu có khám tổng quát hay không ?",
+    "variants": [],
+    "answer": "Bệnh viện Ung Bướu là bệnh viện chuyên khoa khám và điều trị các bệnh lý về ung bướu và ung thư. Trường hợp anh/chị muốn kiểm tra, tầm soát phát hiện sớm ung thư có thể cân nhắc các yếu tố: triệu chứng, tiền sử bệnh bản thân/gia đình, độ tuổi, giới tính...Anh chị có thể cân nhắc lựa chọn đăng ký tầm soát các bệnh lý sau:\r\n- Đối với nam: tầm soát ung thư phổi, gan, dạ dày, đại trực tràng, tuyến giáp, tai mũi họng, tuyến tiền liệt...\r\n- Đối với nữ: tầm soát ung thư vú, giáp, cổ tử cung, phổi, đại trực tràng, gan, dạ dày....\r\nNgoài ra, Bệnh viện cũng có thành lập Đơn vị Tư vấn di truyền ung thư phục vụ các trường hợp có quan tâm về vấn đề di truyền ung thư hoặc có người thân trong gia đình mắc các bệnh lý ung thư. \r\nAnh chị có thể cung cấp thêm thông tin về triệu chứng, độ tuổi, giới tính hoặc tiền sử bệnh của  bản thân/gia đình, Ad sẽ hỗ trợ tư vấn phòng khám phù hợp cho anh/chị."
+  },
+  {
+    "id": 15,
+    "category": "Imported",
+    "question": "Liên hệ trao tặng quà, tiền cho người bệnh ?",
+    "variants": [],
+    "answer": "Để hực hiện từ thiện tại BVUB, vui lòng liên hệ Tổ từ thiện - Phòng Công tác xã hội để được hỗ trợ:\r\n- Hình thức liên hệ: \r\n+ Qua số điện thoại:  0932015644 - (028) 62516161.\r\n+ Liên hệ trực tiếp Phòng Công tác xã hội - Bệnh viện Ung Bướu tại 2 cơ sở Bình Thạnh hoặc Thủ Đức.\r\n- Thời gian làm việc: Từ Thứ Hai - Chủ Nhật, không bao gồm ngày Lễ, Tết.\r\n+ Sáng: 7h30 - 11h30\r\n+ Chiều: 13h00 - 16h30.\r\nTrường hợp không liên hệ được với số điện thoại trên, anh/chị vui lòng để lại tin nhắn. Tổ từ thiện sẽ liên hệ anh/chị sau.\r\nTrân trọng./."
+  },
+  {
+    "id": 16,
+    "category": "Imported",
+    "question": "Quy định giờ thăm nuôi tại bệnh viện ?",
+    "variants": [],
+    "answer": "Quy định giờ thăm nuôi tại Bệnh viện Ung Bướu: \r\n☆ Thứ Hai - Thứ Sáu:\r\n+ Sáng: 5h30 - 7h00\r\n+ Trưa: 11h30 - 13h00\r\n+ Chiều: 17h00 - 21h00\r\n☆ Lễ Tết, Thứ 7, Chủ nhật:  5h30 - 21h00\r\nLưu ý: Để đảm bảo an ninh trật tự và công tác quản lý, thân nhân vui lòng đăng ký thẻ nuôi bệnh tại Khoa điều trị."
+  },
+  {
+    "id": 17,
+    "category": "Imported",
+    "question": "Bệnh viện có căn - tin không ?",
+    "variants": [],
+    "answer": "Dạ Có. \r\n- Cơ sở Thủ Đức: \r\n+ Căn tin chính: Tầng 3\r\n+ Các khu vực phụ: tầng hầm B1 hoặc trước khu vực cổng 2 và cổng 3\r\n- Cơ sở Bình Thạnh: Khu vực sảnh chờ tiếp nhận bệnh viện phí/BHYT (Sân 47 Nguyễn Huy Lượng)."
+  },
+  {
+    "id": 18,
+    "category": "Imported",
+    "question": "BVUB có khám bảo hiểm y tế không ?",
+    "variants": [],
+    "answer": "Dạ Có. Bệnh viện Ung Bướu có thực hiện khám bệnh và điều trị BHYT.\r\nĐể đảm bảo quyền lợi trong khám chữa bệnh BHYT, Quý bệnh nhân/thân nhân vui lòng chuẩn bị các loại giấy tờ sau khi đến khám bệnh và điều trị tại Bệnh viện:\r\n1. Phiếu chuyển cơ sở khám chữa bệnh bảo hiểm y tế hợp lệ (trừ một số mặt bệnh được quy định tại Phụ lục 1 Thông tư số 01/TT-BYT Ngày 01/01/2025) hoặc phiếu hẹn khám lại được Bệnh viện Ung Bướu cấp trước đó (còn giá trị sử dụng)\r\n2. Xuất trình thông tin về thẻ bảo hiểm y tế theo một trong các trường hợp sau đây:\r\nTH1: Thẻ bảo hiểm y tế hoặc mã số bảo hiểm y tế; trường hợp thẻ bảo hiểm y tế chưa có ảnh thì phải xuất trình thêm một trong các giấy tờ tùy thân có ảnh: căn cước, căn cước công dân, giấy chứng nhận căn cước, hộ chiếu, tài khoản định danh điện tử mức độ 2 trên ứng dụng VNelD hoặc giấy tờ chứng minh nhân thân khác do cơ quan, tổ chức có thẩm quyền cấp hoặc giấy xác nhận của công an cấp xã hoặc giấy tờ khác có xác nhận của cơ sở giáo dục nơi quản lý học sinh, sinh viên;\r\nTH2: Căn cước hoặc căn cước công dân hoặc tài khoản định danh điện tử mức độ 2 trên ứng dụng VNelD đã tích hợp thông tin về thẻ bảo hiểm y tế."
+  },
+  {
+    "id": 19,
+    "category": "Imported",
+    "question": "Bệnh viện Ung Bướu có bán bảo hiểm y tế không ?",
+    "variants": [],
+    "answer": "Hiện nay, bệnh viện Ung bướu chưa bán BHYT (đăng ký khám chữa bệnh BHYT ban đầu)."
+  },
+  {
+    "id": 20,
+    "category": "Imported",
+    "question": "Có thể hưởng bảo hiểm y tế mà không cần giấy chuyển cơ sở khám chữa bệnh không ?",
+    "variants": [],
+    "answer": "Dạ có. Trong một số trường hợp sau:\r\n1. Cấp cứu\r\n2. Điều trị nội trú \r\n3. Bệnh lý thuộc danh mục các bệnh lý ung thư không cần xin giấy chuyển cơ sở khám chữa bệnh được quy định tại Phụ Lục I của Thông tư 01/2025/TT-BYT"
+  },
+  {
+    "id": 21,
+    "category": "Imported",
+    "question": "Phiếu chuyển cơ sở khám chữa bệnh có thời hạn sử dụng bao lâu ?",
+    "variants": [],
+    "answer": "1. Trường hợp chuyển cơ sở khám bệnh, chữa bệnh bảo hiểm y tế theo yêu cầu chuyên môn, cơ sở khám bệnh, chữa bệnh nơi chuyển người bệnh phải có Phiếu chuyển cơ sở khám bệnh, chữa bệnh theo mẫu quy định tại Phụ lục VI ban hành kèm theo Thông tư này bằng bản giấy hoặc bản điện tử. Phiếu chuyển cơ sở khám bệnh, chữa bệnh có giá trị sử dụng trong 10 ngày làm việc, kể từ ngày ký.\r\n2. Người tham gia bảo hiểm y tế mắc các bệnh, nhóm bệnh và các trường hợp quy định tại Phụ lục III ban hành kèm theo Thông tư này được sử dụng Phiếu chuyển cơ sở khám bệnh, chữa bệnh có giá trị sử dụng trong 01 năm kể từ ngày ký. Trường hợp hết thời hạn của Phiếu chuyển cơ sở khám bệnh, chữa bệnh mà người bệnh vẫn đang trong lần khám bệnh, chữa bệnh và cần tiếp tục điều trị tại cơ sở khám bệnh, chữa bệnh thì Phiếu chuyển cơ sở khám bệnh, chữa bệnh có giá trị sử dụng đến hết đợt điều trị đó"
+  },
+  {
+    "id": 22,
+    "category": "Imported",
+    "question": "Thủ tục nhập viện tại Bệnh viện Ung Bướu ?",
+    "variants": [],
+    "answer": "Thủ tục nhập viện được thực hiện sau khi người bệnh nhận được chỉ định nhập viện điều trị trong giờ hành chánh từ bác sĩ phòng khám. Cụ thể:\r\n1. Bác sĩ chỉ định nhập viện;\r\n2. Điều dưỡng khoa khám thực hiện hồ sơ bệnh án và chuyển người bệnh đến khoa lâm sàng điều trị\r\n3. Khoa lâm sàng tiếp nhận, thực hiện các thủ tục hành chánh (tạo mã quản lý, đề nghị đóng tiền tạm ứng, cấp thẻ nuôi bệnh...)\r\n4. Người bệnh theo sự hướng dẫn, lịch hẹn tại khoa điều trị.\r\nRiêng đối với các trường hợp có tình trạng cấp cứu sẽ được bác sĩ khám và đánh giá, nhập viện từ khoa Cấp cứu (24/24 giờ) lên khoa lâm sàng phù hợp."
+  },
+  {
+    "id": 23,
+    "category": "Imported",
+    "question": "Đã thực hiện các xét nghiệm tại cơ sở y tế khác, khi đến BVUB có cần thực hiện lại ?",
+    "variants": [],
+    "answer": "Tại Bệnh viện Ung Bướu, các kết quả xét nghiệm từ các cơ sở y tế khác sẽ là cơ sở để bác sĩ nắm được tình trạng người bệnh và có chẩn đoán một cách nhanh chóng, chính xác nhất. Thông thường, người bệnh sẽ không phải làm lại các xét nghiệm đã thực hiện. Tuy nhiên, trong một số tình huống người bệnh cần thực hiện các xét nghiệm bổ sung và việc có sử dụng lại kết quả hay không sẽ do bác sĩ khám quyết định dựa trên góc độ chuyên môn. Trân trọng./."
+  },
+  {
+    "id": 24,
+    "category": "Imported",
+    "question": "Tóm tắt bệnh án cần giấy tờ gì, liên hệ ai, có nhận thay được hay không?",
+    "variants": [],
+    "answer": "Để đăng ký tóm tắt bệnh án/ bản sao kết quả xét nghiệm cận lâm sàng, bạn cần chuẩn bị:\r\n* ĐỐI VỚI NGƯỜI BỆNH ĐANG ĐIỀU TRỊ TẠI KHOA\r\n- Đề nghị xin tóm tắt bệnh án tại khoa điều trị;\r\n- Điền thông tin vào Giấy đề nghị cung cấp bản tóm tắt bệnh án/ tài liệu liên quan;\r\n- Photo CCCD của người bệnh và người thân (trường hợp người thân đề nghị)\r\n- Giấy tờ thể hiện mối quan hệ nhân thân với người bệnh (như giấy đăng ký kết hôn, giấy khai sinh,...)\r\n- Nộp lại cho khoa điều trị và được hẹn ngày nhận tóm tắt bệnh án;\r\n- Phí thực hiện sẽ được trừ từ khoản tạm ứng. \r\n* ĐỐI VỚI NGƯỜI BỆNH ĐÃ XUẤT VIỆN\r\n- Liên hệ phòng Kế hoạch tổng hợp hoặc phòng khám để đăng ký tóm tắt bệnh án;\r\n- Điền thông tin vào Giấy đề nghị cung cấp bản tóm tắt bệnh án/ tài liệu liên quan;\r\n- Photo giấy ra viện/giấy tờ chứng minh đã từng nhập viện điều trị tại Bệnh viện Ung Bướu;\r\n- Photo CCCD của người bệnh và người thân (trường hợp người thân đề nghị)\r\n- Giấy tờ thể hiện mối quan hệ nhân thân với người bệnh (như giấy đăng ký kết hôn, giấy khai sinh,...)\r\n- Đóng phí thực hiện và chờ ngày nhận lại hồ sơ.\r\n* ĐỐI VỚI NGƯỜI BỆNH CHƯA TỪNG NHẬP VIỆN\r\n- Kết quả khám chữa bệnh bản chính do người bệnh giữ. Trường hợp mất, người bệnh cần liên hệ Phòng Kế hoạch tổng hợp/ Khoa Khám bệnh để xin cấp lại bản sao. Bệnh viện không cung cấp tóm tắt bệnh án.\r\n* NGƯỜI BỆNH/ NGƯỜI NHÀ ĐẾN NHẬN TÓM TẮT BỆNH ÁN TẠI PHÒNG KỀ HOẠCH TỔNG HỢP VUI LÒNG CẦM THEO: \r\n- Giầy tờ tùy thân (CCCD của người đến nhận và người bệnh)\r\n- Giấy hẹn (nếu có)."
+  },
+  {
+    "id": 25,
+    "category": "Imported",
+    "question": "Tôi muốn in hóa đơn điện tử",
+    "variants": [],
+    "answer": "Vui lòng truy cập website tương ứng bên dưới để tra cứu và in hóa đơn điện tử tại nhà. \r\n- CƠ SỞ BÌNH THẠNH\r\nhttps://bvub1.easyinvoice.com.vn/\r\n\r\n- CƠ SỞ THỬ ĐỨC\r\nhttps://bvub2.easyinvoice.com.vn/"
+  },
+  {
+    "id": 26,
+    "category": "Imported",
+    "question": "Lấy kết quả giùm được không? Những ai lấy kết quả giùm được và cần giấy tờ gi? Lấy kết quả có cần bệnh nhân đi không?",
+    "variants": [],
+    "answer": "Trường hợp người bệnh không có thời gian quay lại bệnh viện nhận kết quả, người thân có thể mang phiếu hẹn để nhận thay. \r\nTuy nhiên, sau khi hoàn thành các chỉ định cận lâm sàng và có đầy đủ kết quả người bệnh cần quay lại phòng khám để được bác sĩ tư vấn và đưa hướng điều trị phù hợp."
+  },
+  {
+    "id": 27,
+    "category": "Imported",
+    "question": "Trường hợp nào phải nhịn ăn?",
+    "variants": [],
+    "answer": "Việc nhịn ăn sẽ phụ thuộc vào từng bệnh lý khi người bệnh được đề nghị thực hiện các xét nghiệm cận lâm sàng như xét nghiệm đường huyết đói, nội soi dạ dày, nội soi đại trực tràng, CT/MRI có cản quang.... hoặc khi thực hiện các thủ thuật, phẫu thuật.\r\nCác hướng dẫn sẽ được nhân viên y tế cung cấp chi tiết cho anh/chị khi đến khám và điều trị tại bệnh viện. \r\nAnh/chị có thể cung cấp thêm thông tin anh chị cần khám gì, Ad sẽ hỗ trợ tư vấn cụ thể hơn."
+  },
+  {
+    "id": 28,
+    "category": "Imported",
+    "question": "Lỡ đăng ký trên web và chuyển tiền nhưng muốn đổi lịch, lấy lại tiền thì phải làm thế nào?",
+    "variants": [],
+    "answer": "Bệnh viện Ung Bướu đang triển khai đặt hẹn khám qua ứng dụng tại Cơ sở Bình Thạnh với các ưng dụng đặt khám gồm: BVUB - Hẹn khám và ứng dụng YouMed \r\n1. QUY ĐỊNH HỦY LỊCH\r\n- Khách hàng tự hủy lịch trên ứng dụng trước 23h59 của ngày hôm trước ngày khám;\r\n- Hoặc gọi đến số 19002805 để được hỗ trợ trường hợp hủy sau thời gian quy định.\r\n2. HƯỚNG DẪN HỦY LỊCH\r\n- Đăng nhập vào ứng dụng\r\n- Chọn lịch khám -> Chọn lịch khám cần hủy\r\n- Chọn HỦY LỊCH \r\n3. QUY ĐỊNH HOÀN TIỀN\r\n- Ví điện tử: 1 - 30 ngày làm việc\r\n- Thẻ ATM: 1- 30 ngày làm việc\r\n- Thẻ visa, Mastercard, JCB: 1- 45 ngày làm việc."
+  },
+  {
+    "id": 29,
+    "category": "Imported",
+    "question": "Tôi không điều trị nữa nhưng đã đóng tiền tạm ứng trước đó giờ tôi muốn lấy lại tiền tạm ứng thì như thế nào và có thể nhờ người lấy thay được không?",
+    "variants": [],
+    "answer": "Để được hoàn tiền tạm ứng, anh/chị cần cung cấp:\r\n1. Phiếu thu tiền tạm ứng (bản gốc) đã nộp cho bệnh viện trước đó;\r\n2. Phiếu hẹn/giấy tờ xác nhận khoa điều trị;\r\n3. Căn cước công dân bản chính (người làm thủ tục thay);\r\n4. Liên hệ khoa điều trị thực hiện thủ tục xuất viện, thanh toán chi phí điều trị và nhận lại khoảng tạm ứng còn lại tại Quầy Dịch vụ tài chính.\r\n\r\nThời gian: Từ 7h30 - 12h00 và 13h00 - 16h30 từ Thứ Hai - Thứ Sáu.\r\nĐịa điểm: Cơ sở điều trị trong lần gần nhất."
+  },
+  {
+    "id": 30,
+    "category": "Imported",
+    "question": "Tôi bị mất giấy ra viện giờ tôi muốn xin lại giấy ra viện thì như thế nào?",
+    "variants": [],
+    "answer": "Anh/ chị liên hệ phòng Kế hoạch tổng hợp để làm thủ tục xin cấp giấy ra viện lần 2;\r\n- Điền thông tin vào Giấy đề nghị cung cấp bản tóm tắt bệnh án/ tài liệu liên quan;\r\n- Cung cấp giấy ra viện/giấy tờ chứng minh đã từng nhập viện điều trị tại Bệnh viện Ung Bướu;\r\n- Photo CCCD của người bệnh và người thân (trường hợp người thân đề nghị)\r\n- Giấy tờ thể hiện mối quan hệ nhân thân với người bệnh (như giấy đăng ký kết hôn, giấy khai sinh,...)\r\n- Đóng phí thực hiện và chờ nhận giấy ra viện lần 2"
+  },
+  {
+    "id": 31,
+    "category": "Imported",
+    "question": "Người nhà tôi đang điều trị nhưng đã mất, vậy giờ tôi muốn liên hệ làm hồ sơ xuất viện thì như thế nào?",
+    "variants": [],
+    "answer": "Anh/chị có thể liên hệ khoa người bệnh điều trị trước đó để làm thủ tục xuất viện và hoàn tất thanh toán các khoản chi phí trong quá trình điều trị. Lưu ý mang theo các giấy tờ:\r\n- Phiếu hẹn, giấy tờ xác nhận khoa điều trị\r\n- Phiếu thu tiền tạm ứng (bản chính) đã nộp tạm ứng trước đó\r\n- Căn cước công dân người đến làm thủ tục."
+  },
+  {
+    "id": 32,
+    "category": "Imported",
+    "question": "Bệnh viện có nhận chăm sóc sức khỏe tại nhà dành cho người bệnh ung thư ?",
+    "variants": [],
+    "answer": "DẠ CÓ.\r\nBệnh viện có triển khai chăm sóc giảm nhẹ cho người bệnh tại nhà.\r\nBạn có thể liên hệ số (028)38433021 - (028)36227722 - máy nhánh 1383 - 1384 kết nối khoa Chăm sóc giảm nhẹ để được tư vấn cụ thể."
+  },
+  {
+    "id": 33,
+    "category": "Imported",
+    "question": "Thủ tục nhập viện khoa Chăm sóc giảm nhẹ ?",
+    "variants": [],
+    "answer": "Để nhập viện điều trị tại khoa Chăm sóc giảm nhẹ cần:\r\n- Thực hiện các bước theo quy trình nhập viện tại Bệnh viện Ung Bướu\r\n(Trường hợp người bệnh không đủ sức khỏe để đến bệnh viện trực tiếp, người thân có thể mang hồ sơ đến đăng ký khám bệnh và thực hiện các thủ tục cần thiết.)"
+  },
+  {
+    "id": 34,
+    "category": "Imported",
+    "question": "Tôi muốn gửi mẫu để làm xét nghiệm thủ tục như thế nào?",
+    "variants": [],
+    "answer": "- CƠ SỞ BÌNH THẠNH\r\n+ Liên hệ Khoa Giải phẫu bệnh tại Tầng 5 - Khu khám, chẩn đoán và điều trị kỹ thuật cao\r\n- CƠ SỞ THỦ ĐỨC\r\n+ Liên hệ Khoa Giải phẫu bệnh tại Tầng 3 - Tháp A"
+  },
+  {
+    "id": 35,
+    "category": "Imported",
+    "question": "Khi đến khám bệnh viện Ung Bướu tôi có cần phải nhịn ăn để làm xét nghiệm máu không?",
+    "variants": [],
+    "answer": "Việc nhịn ăn sẽ phụ thuộc vào từng bệnh lý và chỉ định cận lâm sàng người bệnh được đề nghị thực hiện. Anh/chị vui lòng cung cấp thêm thông tin bệnh lý anh/chị đang cần thăm khám tại Bệnh viện Ung Bướu, Ad sẽ hỗ trợ tư vấn cụ thể hơn."
+  },
+  {
+    "id": 36,
+    "category": "Imported",
+    "question": "Tôi đi khám không có xin phiếu chuyển vậy lúc mổ tôi có được hưởng BHYT không và được hưởng bao nhiêu phần trăm?",
+    "variants": [],
+    "answer": "Các trường hợp được hưởng BHYT tại Bệnh viện Ung Bướu KHÔNG cần xin giấy chuyển cơ sở khám chữa bệnh.\r\n1. Cấp cứu\r\n2. Nhập viện nội trú \r\n3. Bệnh lý thuộc danh mục các bệnh lý ung thư không cần xin giấy chuyển cơ sở khám chữa bệnh được quy định tại Phụ Lục I của Thông tư 01/2025/TT-BYT. \r\nTrường hợp anh chị không thuộc 03 nhóm đối tượng trên, vui lòng thực hiện đầy đủ các yêu cầu khi khám chữa bệnh bảo hiểm y tế để được đảm bảo quyền lợi.\r\n(Đính kèm nội dung yêu cầu khi khám BHYT)."
+  },
+  {
+    "id": 37,
+    "category": "Imported",
+    "question": "Người nhà tôi rất yếu không thể di chuyển được liệu tôi có thể mang theo giấy tờ kết quả bệnh án của người nhà để gặp bác sĩ bệnh viện tư vấn không?",
+    "variants": [],
+    "answer": "Để đảm bảo cho quá trình thăm khám, chẩn đoán và tư vấn một cách chính xác, khi khám bệnh bác sĩ cần khám lâm sàng và thực hiện cận lâm sàng trên người bệnh. Anh/chị cố gắng sắp xếp thời gian đưa người bệnh quay lại bệnh viện để được tư vấn. Trân trọng./."
+  },
+  {
+    "id": 38,
+    "category": "Imported",
+    "question": "Có BHYT thì khám ở cơ sở nào ? Giấy chuyển tuyến cơ sở 2 có khám được ở cơ sở 1 ?",
+    "variants": [],
+    "answer": "Bệnh viện Ung Bướu hiện đang tiếp nhận khám và điều trị tại 2 cơ sở. Bạn có thể đến 01 trong 02 cơ sở để đăng ký khám. Trường hợp cần nhập viện điều trị bác sĩ sẽ tư vấn và chuyển anh/chị đến cơ sở phù hợp.\r\nBệnh viện Ung Bướu chấp nhận giấy chuyển cơ sở khám chữa bệnh hợp lệ không phân biệt cơ sở."
+  },
+  {
+    "id": 39,
+    "category": "Imported",
+    "question": "Bệnh viện Ung Bướu đăng ký chọn bác sĩ theo yêu cầu được không?",
+    "variants": [],
+    "answer": "DẠ KHÔNG. Hiện Bệnh viện Ung Bướu chưa triển khai hình thức đăng ký khám và điều trị theo bác sĩ."
+  },
+  {
+    "id": 40,
+    "category": "Imported",
+    "question": "Đăng ký tổng đài có khám nhanh, khám liền và khám ưu tiên không?",
+    "variants": [],
+    "answer": "Tiện ích người bệnh khi đăng ký khám bệnh qua tổng đài: \r\n- Được cấp số thứ tự phòng khám tại nhà, có khung giờ khám cụ thể không cần phải đến quá sớm để đăng ký;\r\n- Được phân luồng thực hiện thủ tục riêng, không phải chen lấn với người bệnh lấy số trực tiếp tại bệnh viện;\r\n- Giảm được thời gian chờ, chủ động được thời gian đến bệnh viện.\r\nĐây không phải là hình thức khám nhanh, khám ưu tiên. Để đảm bảo việc khám được thuận tiện, anh/chị cần tuân thủ theo đúng số thứ tự và thời gian được hẹn trên tin nhắn khi đăng ký lịch khám thành công."
+  },
+  {
+    "id": 41,
+    "category": "Imported",
+    "question": "Giá phí khám tổng quát bao nhiêu? Có đăng ký làm đăng ký siêu âm, xét nghiệm X-quang  luôn không?",
+    "variants": [],
+    "answer": "Anh/chị vui lòng cung cấp cụ thể thông tin triệu chứng, độ tuổi, giới tính, tiền sử bệnh lý gia đình để Ad hỗ trợ tư vấn phòng khám phù hợp. \r\nCác chỉ định cận lâm sàng như xét nghiệm, siêu âm, Xquang ...sẽ được đăng ký trực tiếp tại bệnh viện khi bác sĩ đề nghị thực hiện."
+  },
+  {
+    "id": 42,
+    "category": "Imported",
+    "question": "Người bệnh điều trị tại Khoa lâm sàng nội, ngoại, xạ có lấy số thứ tự qua tổng đài được không?",
+    "variants": [],
+    "answer": "DẠ KHÔNG. \r\nSau khi hoàn thành đợt điều trị khoa sẽ cung cấp phiếu hẹn khám có thời gian, số thứ tự phòng khám. Trường hợp anh/chị không nhận được phiếu hẹn, vui lòng liên hệ lại Khoa điều trị để được hỗ trợ. \r\nSố điện thoại liên hệ: (028)38433021 - (028)36227722 bấm phí 0 để gặp tổng đài viên và yêu cầu kết nối máy khoa điều trị."
+  },
+  {
+    "id": 43,
+    "category": "Imported",
+    "question": "Hướng dẫn đăng ký tư vấn di truyền?",
+    "variants": [],
+    "answer": "Hiện tại phòng khám tư vấn di truyền đang được triển khai tại Cơ sở 2 Thủ Đức. Anh/chị là người bệnh đang điều trị tại các khoa nội, ngoại, xạ vui lòng liên hệ bác sĩ điều trị để được tư vấn."
+  },
+  {
+    "id": 44,
+    "category": "Imported",
+    "question": "Cơ sở 1 có tổ chức khám tư vấn dinh dưỡng cho người bệnh không ?",
+    "variants": [],
+    "answer": "DẠ CÓ. Trong quá trình thăm khám, chẩn đoán và điều trị bác sĩ sẽ chuyển anh/chị đến phòng khám tư vấn dinh dưỡng (nếu cần) hoặc anh/chị có thể chủ động đề nghị bác sĩ cân nhắc."
+  },
+  {
+    "id": 45,
+    "category": "Imported",
+    "question": "Tôi có kết quả sinh thiết hẹn ngày kia lấy, tôi có thể nhờ người nhà lấy giúp và đem kết quả nhờ bác sĩ tư vấn được không?",
+    "variants": [],
+    "answer": "Trường hợp người bệnh không có thời gian quay lại bệnh viện nhận kết quả, người thân có thể mang phiếu hẹn để nhận thay. Tuy nhiên, sau khi hoàn thành các chỉ định cận lâm sàng và có đầy đủ kết quả người bệnh cần quay lại phòng khám để được bác sĩ tư vấn và đưa hướng điều trị phù hợp."
+  },
+  {
+    "id": 46,
+    "category": "Imported",
+    "question": "Tôi thuộc đối tượng ưu tiên khi đăng kí lịch tổng đài tôi có được số ưu tiên không ?",
+    "variants": [],
+    "answer": "DẠ CÓ. \r\nĐối tượng ưu tiên được quy định cụ thể trong Luật Khám, chữa bệnh để hỗ trợ người bệnh. Do đó anh/chị có đăng ký tổng đài hay không đều sẽ được bệnh viện áp dụng chính sách ưu tiên theo đúng quy định khi đến khám và điều trị tại Bệnh viện."
+  },
+  {
+    "id": 47,
+    "category": "Imported",
+    "question": "Đã đăng ký lịch thực hiện cận lâm sàng và thanh toán chi phí thực hiện. Có thể dời ngày/hủy lịch được không ?",
+    "variants": [],
+    "answer": "DẠ CÓ.\r\nAnh/chị có thể liên hệ khoa thực hiện để điều chỉnh lịch theo nhu cầu."
+  },
+  {
+    "id": 48,
+    "category": "Imported",
+    "question": "Có thể tái khám trước thời gian hẹn được không ?",
+    "variants": [],
+    "answer": "DẠ CÓ\r\nKhi có bất kỳ thay đổi bất thường nào sau khi hoàn tất quá trình khám hoặc điều trị anh/chị đều có thể quay lại bệnh viện."
+  },
+  {
+    "id": 49,
+    "category": "Imported",
+    "question": "Dị ứng/phản ứng với thuốc điều trị ?",
+    "variants": [],
+    "answer": "- Ngưng sử dụng thuốc. Liên hệ cơ sở y tế gần nhất để được cấp cứu kịp thời.\r\n- Quay lại bệnh viện để được bác sĩ kiểm tra, xác định nguyên nhân và điều chỉnh toa (nếu cần)."
+  },
+  {
+    "id": 50,
+    "category": "Imported",
+    "question": "Tư vấn đăng ký chụp PET/CT ?",
+    "variants": [],
+    "answer": "Anh/chị có thể liên hệ Khoa Y học hạt nhân để được hỗ trợ tư vấn và đặt hẹn chụp. \r\n- Số điện thoại liên hệ: (028)38433021 - (028)36227722 máy nhánh 1181\r\n- Thời gian: Từ 7h30 - 12h00 và 13h00 - 16h30 từ Thứ Hai - Thứ Sáu\r\n- Địa chỉ liên hệ: \r\n+ Cơ sở Bình Thạnh: tầng hầm B1 - Khu Khám, chẩn đoán và điều trị Kỹ thuật cao\r\n+ Cơ sở Thủ Đức: tầng hầm B1 - Khoa Y học hạt nhân."
+  },
+  {
+    "id": 51,
+    "category": "Imported",
+    "question": "Chụp PET/CT có thanh toán BHYT ? Quy trình đăng ký ?",
+    "variants": [],
+    "answer": "Có. Tuy nhiên các chỉ định chụp PET/CT cần phù hợp với điều kiện thanh toán BHYT theo các hướng dẫn hiện hành. Do đó, thông thường bạn sẽ được nhập viện lên khoa để các bác sĩ đánh giá tình trạng bệnh lý, hội chẩn khoa xét chỉ định chụp PET/CT."
+  },
+  {
+    "id": 52,
+    "category": "Imported",
+    "question": "Bệnh viện có thực hiện kỹ thuật đốt u tuyến giáp ?",
+    "variants": [],
+    "answer": "DẠ CÓ.\r\nĐể được tư vấn cụ thể về kỹ thuật và có hướng điều trị thích hợp, anh/chị cần đến bệnh viện để được bác sĩ trực tiếp thăm khám và tư vấn. Anh/chị có thể đăng ký trực tiếp tại bệnh viện hoặc đặt hẹn trước qua tổng đài 1900636223 hoặc trang Zalo OA chính thức của Bệnh viện Ung Bướu."
+  },
+  {
+    "id": 53,
+    "category": "Imported",
+    "question": "Bệnh nhân đang điều trị tại bệnh viện khác, có nhu cầu chuyển đến BVUB điều trị, Bệnh viện có tiếp nhận không ?",
+    "variants": [],
+    "answer": "DẠ CÓ.\r\nĐể hỗ trợ cho việc thăm khám, chẩn đoán bệnh, giảm được thời gian chờ, anh/chị có thể xin tóm tắt bệnh án, kết quả khám và điều trị hiện có khi đến khám tại Bệnh viện Ung Bướu."
+  },
+  {
+    "id": 54,
+    "category": "Imported",
+    "question": "Yêu cầu cung cấp số điện thoại bác sĩ, nhân viên y tế ?",
+    "variants": [],
+    "answer": "Bệnh viện không cung cấp thông tin cá nhân của bác sĩ, nhân viên y tế. \r\nĐể liên hệ bác sĩ điều trị, anh/chị có thể liên hệ khoa điều trị qua số điện thoại (028) 38433021 - (028) 36227722 từ 7h30 - 12h00 - 13h00 - 16h30 từ Thứ Hai - Thứ Sáu."
+  },
+  {
+    "id": 55,
+    "category": "Imported",
+    "question": "Muốn phản ảnh thái độ nhân viên y tế, chất lượng dịch vụ bệnh viện ?",
+    "variants": [],
+    "answer": "Anh/chị vui lòng cung cấp thông tin, Ad sẽ tổng hợp thông tin và chuyển đến bộ phận phụ trách xử lý.\r\n\r\nCảm ơn anh/chị đã có ý kiến đóng góp nhằm cải thiện chất lượng dịch vụ tại Bệnh viện. Ad sẽ tổng hợp và chuyển thông tin đến bộ phận phụ trách. \r\n\r\nRất tiếc vì anh/chị có những trải nghiệm không tốt trong quá trình khám và điều trị tại bệnh viện. Chúng tôi sẽ chuyển thông tin đến bộ phận phụ trách để có hướng xử lý. Trân trọng./."
+  },
+  {
+    "id": 56,
+    "category": "Imported",
+    "question": "Không liên hệ được tổng đài bệnh viện ?",
+    "variants": [],
+    "answer": "Do số lượng cuộc gọi đến đông bệnh viện không thể phản hồi cuộc gọi. Anh/chị vui lòng gọi lại sau. Hoặc cung cấp thông tin cần hỗ trợ , Ad sẽ phản hồi thông tin trong phạm vi cho phép."
+  },
+  {
+    "id": 57,
+    "category": "Imported",
+    "question": "Bảng giá dịch vụ ?",
+    "variants": [],
+    "answer": "Để tra cứu bảng giá dịch vụ kỹ thuật bệnh viện. Anh/chị vui lòng truy cập Website: https://benhvienungbuou.vn/"
+  },
+  {
+    "id": 58,
+    "category": "Imported",
+    "question": "Có thể theo dõi thông tin hoạt động bệnh viện ở đâu ?",
+    "variants": [],
+    "answer": "Để theo dõi thông tin về hoạt động bệnh viện, anh/chị có thể đăng ký theo dõi các trang thông tin chính thức bệnh viện:\r\n- Website: https://benhvienungbuou.vn/\r\n- Fanpage: Bệnh viện Ung Bướu Thành phố Hồ Chí Minh\r\n- Zalo OA: Bệnh viện Ung Bướu Thành phố Hồ Chí Minh\r\n- Youtube: Bệnh viện Ung Bướu Thành phố Hồ Chí Minh\r\n- Tiktok: Bệnh viện Ung Bướu Thành phố Hồ Chí Minh"
+  },
+  {
+    "id": 59,
+    "category": "Imported",
+    "question": "Kỹ thuật đốt sóng cao tầng thực hiện ở cơ sở nào?",
+    "variants": [],
+    "answer": "Kỹ thuật đốt sóng cao tầng được triển khai thực hiện ở cả hai cơ sở Bình Thạnh và Thủ Đức. Anh/chị có thể đến trực tiếp bệnh viện đăng ký khám hoặc đặt hẹn khám qua tổng đài 1900636223."
+  },
+  {
+    "id": 60,
+    "category": "Imported",
+    "question": "Kỹ thuật đốt sóng cao tầng có thể sử dụng bảo hiểm y tế hay không?",
+    "variants": [],
+    "answer": "DẠ CÓ.\r\n(Đính kèm nội dung đăng ký khám bệnh theo BHYT)."
+  },
+  {
+    "id": 61,
+    "category": "Imported",
+    "question": "Quy trình đăng ký thực hiện đốt sóng cao tầng như thế nào?",
+    "variants": [],
+    "answer": "Theo quy trình đăng ký khám bệnh tại Bệnh viện Ung Bướu, gồm:\r\n1. Đăng ký khám bệnh\r\n2. Bác sĩ thăm khám và chỉ định đốt sóng cao tầng\r\n3. Thực hiện bộ xét nghiệm trước khi đốt\r\n4. Thực hiện và chờ hậu phẫu\r\n5. Nhận toa thuốc và phiếu hẹn khám lại."
+  },
+  {
+    "id": 62,
+    "category": "Imported",
+    "question": "Kỹ thuật đốt sóng cao tầng có thể thực hiện trong ngày được hay không?",
+    "variants": [],
+    "answer": "DẠ CÓ\r\nKỹ thuật sẽ được thực hiện và người bệnh sẽ được về ngay trong ngày thực hiện.\r\nThời gian thực hiện sẽ tùy thuộc vào lịch hẹn thực tế tại bệnh viện."
+  },
+  {
+    "id": 63,
+    "category": "Imported",
+    "question": "Sau khi thực hiện đốt sóng cao tầng, bệnh nhân có thể về trong ngày hay không?",
+    "variants": [],
+    "answer": "DẠ CÓ"
+  },
+  {
+    "id": 64,
+    "category": "Imported",
+    "question": "Kỹ thuật hút chân không vú thực hiện ở cơ sở nào?",
+    "variants": [],
+    "answer": "Kỹ thuật được thực hiện song song tại hai cơ sở."
+  },
+  {
+    "id": 65,
+    "category": "Imported",
+    "question": "Kỹ thuật hút chân không vú có thể sử dụng bảo hiểm y tế hay không?",
+    "variants": [],
+    "answer": "DẠ KHÔNG.\r\nHiện tại bạn cần chi trả toàn bộ chi phí thực hiện. BHYT chưa hỗ trợ chi trả."
+  },
+  {
+    "id": 66,
+    "category": "Imported",
+    "question": "Quy trình đăng ký thực hiện hút chân không vú như thế nào?",
+    "variants": [],
+    "answer": "Theo quy trình đăng ký khám bệnh tại Bệnh viện Ung Bướu, gồm:\r\n1. Đăng ký khám bệnh\r\n2. Bác sĩ thăm khám và chỉ định thực hiện\r\n3. Thực hiện bộ xét nghiệm cần thiết\r\n4. Thực hiện và chờ hậu phẫu\r\n5. Nhận toa thuốc và phiếu hẹn khám lại."
+  },
+  {
+    "id": 67,
+    "category": "Imported",
+    "question": "Kỹ thuật hút chân không vú có thể thực hiện trong ngày được hay không?",
+    "variants": [],
+    "answer": "DẠ CÓ\r\nKỹ thuật sẽ được thực hiện và người bệnh sẽ được về ngay trong ngày thực hiện.\r\nThời gian thực hiện sẽ tùy thuộc vào lịch hẹn thực tế tại bệnh viện."
+  },
+  {
+    "id": 68,
+    "category": "Imported",
+    "question": "Thứ 7 và chủ nhật ở 2 cơ sở có làm chọc hút hay không?",
+    "variants": [],
+    "answer": "DẠ KHÔNG. \r\nKỹ thuật được thực hiện từ thứ 2 - thứ 6."
+  },
+  {
+    "id": 69,
+    "category": "Imported",
+    "question": "Thứ 7 và chủ nhật ở 2 cơ sở có làm nội soi hay không?",
+    "variants": [],
+    "answer": "DẠ CÓ\r\nBệnh viện có thực hiện nội soi tai mũi họng\r\nCơ sở phường Bình Thạnh (quận Bình Thạnh cũ) vào buổi sáng thứ 7, sáng chủ nhật từ 7h30 - 11h30.\r\nCơ sở phường Tăng Nhơn Phú (Thủ Đức cũ) vào buổi sáng thứ 7 từ 7h30- 11h30.\r\n Các chỉ định nội soi còn lại được đăng ký và thực hiện trong tuần từ Thứ Hai - Thứ Sáu."
+  },
+  {
+    "id": 70,
+    "category": "Imported",
+    "question": "Kỹ thuật PET/CT thực hiện ở đâu và có sử dụng BHYT được không?",
+    "variants": [],
+    "answer": "PET/CT được thực hiện ở 2 cơ sở.\r\nĐể được hưởng BHYT, anh/chị cần đăng ký khám bệnh theo quy trình đăng ký khám bệnh BHYT. Tuy nhiên các chỉ định chụp PET/CT cần phù hợp với điều kiện thanh toán BHYT theo các hướng dẫn hiện hành. Do đó, thông thường bạn sẽ được nhập viện lên khoa để các bác sĩ đánh giá tình trạng bệnh lý, hội chẩn khoa xét chỉ định chụp PET/CT."
+  },
+  {
+    "id": 71,
+    "category": "Imported",
+    "question": "Khám tại cơ sở 1 nhưng được chỉ định thực hiện MRI/CT ở cơ sở 2, vậy có thể đọc kết quả ở cơ sở 2 được không?",
+    "variants": [],
+    "answer": "Anh/chị có thể lựa chọn quay lại cơ sở ban đầu hoặc đăng ký khám tại cơ sở thực hiện để được tư vấn kết quả."
+  },
+  {
+    "id": 72,
+    "category": "Imported",
+    "question": "Quy trình đăng ký điều trị chăm sóc giảm nhẹ tại bệnh viện như thế nào?",
+    "variants": [],
+    "answer": "Theo quy trình nhập viện thông thường.\r\nTrường hợp người bệnh không đủ sức khỏe để đến bệnh viện, người đại diện hợp pháp có thể mang hồ sơ đến để thực hiện thay các thủ tục."
+  },
+  {
+    "id": 73,
+    "category": "Imported",
+    "question": "Thân nhân có thể đăng ký chăm sóc giảm nhẹ thay cho bệnh nhân được không?",
+    "variants": [],
+    "answer": "DẠ CÓ"
+  },
+  {
+    "id": 74,
+    "category": "Imported",
+    "question": "Thân nhân có thể lấy kết quả và được bác sĩ tư vấn thay cho người bệnh được không?",
+    "variants": [],
+    "answer": "Thân nhân có thể nhận kết quả thay. Tuy nhiên, sau khi thực hiện hết các chỉ định lâm sàng và có đầy đủ kết quả, người bệnh cần quay lại phòng khám để được bác sĩ thăm khám, tư vấn hướng điều trị phù hợp. Anh/chị sắp xếp thời gian đưa người bệnh quay lại bệnh viện để được bác sĩ tư vấn."
+  },
+  {
+    "id": 75,
+    "category": "Imported",
+    "question": "Không có bệnh nhân thì thân nhân có thể làm hồ sơ nhập viện thay cho bệnh nhân được không?",
+    "variants": [],
+    "answer": "DẠ KHÔNG"
+  },
+  {
+    "id": 76,
+    "category": "Imported",
+    "question": "Bệnh viện có trả kết quả online hoặc qua bưu điện hay không?",
+    "variants": [],
+    "answer": "DẠ KHÔNG\r\nHiện BVUB chưa triển khai hình thức trả kết quả trực tuyến."
+  },
+  {
+    "id": 77,
+    "category": "Imported",
+    "question": "Bệnh nhân bị mất hồ sơ thì bác sĩ có thể khám được không?",
+    "variants": [],
+    "answer": "DẠ CÓ\r\nViệc thăm khám, chẩn đoán bệnh sẽ dựa trên kết quả hiện tại. Hồ sơ cũ sẽ mang tính chất tham khảo, theo dõi tình hình tiến triển của bệnh."
+  },
+  {
+    "id": 78,
+    "category": "Imported",
+    "question": "Bệnh nhân có thể mua 1 toa thuốc nhiều lần tại bệnh viện hay không?",
+    "variants": [],
+    "answer": "DẠ KHÔNG\r\nToa thuốc được Khoa Dược cấp/bán chỉ 1 lần.\r\nBV không cấp lại thuốc theo toa cũ, người bệnh cần đăng ký khám bệnh để được bác sĩ cấp toa thuốc mới phù hợp với bệnh trạng."
+  },
+  {
+    "id": 79,
+    "category": "Imported",
+    "question": "Bệnh nhân có phản ứng với thuốc (cảm thấy đau hơn, bị dị ứng hay có triệu chứng phát sinh…) thì nên xử lý như thế nào?",
+    "variants": [],
+    "answer": "Ngưng sử dụng thuốc. Đến cấp cứu gần nhất.\r\nQuay lại bệnh viện để được xác định nguyên nhân, điều chỉnh/đổi toa thuốc."
+  },
+  {
+    "id": 80,
+    "category": "Imported",
+    "question": "Bệnh nhân có nhiều mã y tế thì sử dụng mã y tế nào để đặt lịch?",
+    "variants": [],
+    "answer": "Bệnh nhân có nhiều mã y tế (MYT) thì sẽ ưu tiên sử dung MYT có hồ sơ bệnh án (đã được nhập viện và điều trị). Sau khi đăng ký, bạn cần mang các giấy tờ đến gặp nhân viên Quầy chăm sóc khách hàng tại Bệnh viện thực hiện các quy trình nội bộ để giữ lại 1 MYT duy nhất nhằm đảm bảo thuận tiện trong quá trình khám bệnh, chữa bệnh tại Bệnh viện Ung Bướu."
+  },
+  {
+    "id": 81,
+    "category": "Imported",
+    "question": "Bệnh nhân báo đã khám/phẫu thuật từ rất lâu nhưng kiếm trên hệ thống không thấy mã, thì bệnh nhân có thể đăng ký đặt lịch không?",
+    "variants": [],
+    "answer": "Hiện nay, tại 2 cơ sở của bệnh viện mỗi người bệnh sẽ có MYT khác nhau nên người bệnh cần lưu ý khi đăng ký đặt lịch."
+  },
+  {
+    "id": 82,
+    "category": "Imported",
+    "question": "Bệnh viện có khám VIP không?",
+    "variants": [],
+    "answer": "Bệnh viện có triển khai hình thức khám chuyên gia hoạt động từ thứ Hai đến thứ sáu: Sáng : 7h30-12h00; Chiều 13h00-16h30\r\nĐể đặt lịch khám chuyên gia anh/chị vui lòng liên hệ số 028 7303 6223  trong khung giờ hành chính hoặc truy cập website: https://kcg.bvungbuou.vn/"
+  },
+  {
+    "id": 83,
+    "category": "Imported",
+    "question": "Tôi muốn tra cứu gói khám chuyên gia thì như thế nào?",
+    "variants": [],
+    "answer": "Để tra cứu gói khám chuyên gia, anh/chị truy cập vào website bệnh viện: https://benhvienungbuou.vn/"
+  },
+  {
+    "id": 84,
+    "category": "Imported",
+    "question": "Khám dịch vụ có được hưởng BHYT hay không?",
+    "variants": [],
+    "answer": "Cơ sở Bình Thanh: Người bệnh chi trả toàn bộ chi phí, không sử dụng BHYT. \r\nCơ sở Tăng Nhơn Phú (Thủ Đức cũ):\r\nTừ thứ 2 đến thứ 6:\r\nKhám Ngoài giờ: chỉ được hưởng BHYT tiền thuốc, nhập viện theo diện BHYT nếu có.\r\nKhám dịch vụ trong giờ: Người bệnh đóng chi phí chênh lệch.\r\nNgoài giờ thứ 7: Người bệnh chi trả toàn bộ chi phí khám bệnh."
+  },
+  {
+    "id": 85,
+    "category": "Imported",
+    "question": "Tôi có thể lấy lại tiền tạm ứng đã đóng cho bệnh viện thay người nhà được không?",
+    "variants": [],
+    "answer": "Để thanh toán tiền tạm ứng thân nhân người bệnh cần cung cấp: Phiếu thu tiền tạm ứng ( bản gốc ) \r\nGiấy hẹn tái khám ( nếu có) \r\nBảng kê thanh toán đợt gần nhất\r\nCCCD của người bệnh, người nhà"
+  },
+  {
+    "id": 86,
+    "category": "Imported",
+    "question": "Tôi bị mất hết giấy tờ, thì lấy tiền tạm ứng như thế nào?",
+    "variants": [],
+    "answer": "Dạ trường hợp các chứng từ bị thất lạc, hoặc đã đốt khi đến thanh toán người nhà vui lòng mang theo 1. Giấy báo tử bản chính 2. CCCD bản chính kèm photo của bệnh nhân ( nếu có) 3. CCCD bản chính kèm photo của người nhà Khi đến bệnh viện Anh/ chị đến trực tiếp hành chánh khoa báo mất để được hướng dẫn"
+  },
+  {
+    "id": 87,
+    "category": "Imported",
+    "question": "Khi  khám BHYT thì tôi được hưởng bao nhiêu phần trăm?",
+    "variants": [],
+    "answer": "Dạ trường hợp anh/chị khám theo BHYT tại bệnh viện sẽ được hưởng đúng quyền lợi theo giá trị thẻ"
+  },
+  {
+    "id": 90,
+    "category": "",
+    "question": "Giá gửi xe tại bệnh viện",
+    "answer": "Bảng giá gửi xe:\n- Xe đạp/đạp điện: 2,000đ (ngày) - 4,000đ (đêm).\n- Xe máy/máy điện: 4,000đ (ngày) - 6,000đ (đêm).\n- Ô tô dưới 16 chỗ: 30,000đ cho 6 giờ đầu, mỗi 6 giờ tiếp theo cộng thêm 30,000đ.\n(Khung giờ ngày: 06h00-18h00, Đêm: 18h00-06h00).",
+    "variants": [
+      "gửi xe máy",
+      "gửi ô tô",
+      "bãi xe",
+      "chi phí giữ xe"
+    ]
+  }
+]

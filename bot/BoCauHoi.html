@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Khối Tri Thức Bot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: rgba(255, 255, 255, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    h1 {
+      font-size: 2rem;
+      background: -webkit-linear-gradient(0deg, #fff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    button:hover { background: var(--primary-hover); transform: translateY(-2px); }
+    button.danger { background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+    button.danger:hover { background: var(--danger-hover); }
+
+    .glass-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: fadeInUp 0.8s ease;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: rgba(255,255,255,0.02); }
+
+    .variants-tag {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      margin: 2px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .modal.show { display: flex; opacity: 1; }
+    
+    .modal-content {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 600px;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid var(--border);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .modal.show .modal-content { transform: scale(1); }
+
+    .modal h2 { margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 8px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus { border-color: var(--primary); }
+    textarea { resize: vertical; min-height: 100px; }
+
+    .actions { display: flex; gap: 10px; margin-top: 10px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 25px; }
+    .btn-cancel { background: transparent; border: 1px solid var(--text-muted); box-shadow: none; color: var(--text-muted); }
+    .btn-cancel:hover { background: rgba(255,255,255,0.1); transform: none; }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(16,185,129,0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* Animations */
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Login Screen */
+    .login-screen {
+      position: fixed; inset: 0; background: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      z-index: 100; display: none; align-items: center; justify-content: center;
+    }
+    .login-screen.show { display: flex; }
+    #loginError { color: #ef4444; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; margin-top: 15px; font-size: 0.9rem; display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Màn hình Đăng Nhập Đẹp -->
+  <div class="login-screen" id="loginScreen">
+    <div class="glass-panel" style="max-width: 400px; width: 100%; text-align: center;">
+      <h2 style="margin-bottom: 20px;">🔐 Đăng nhập Quản Trị</h2>
+      <p style="color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem;">Sử dụng tài khoản Chatwoot của bạn</p>
+      <input type="text" id="loginEmail" placeholder="Email (Ví dụ: huudien111@gmail.com)" style="margin-bottom: 15px;">
+      <input type="password" id="loginPass" placeholder="Mật khẩu" style="margin-bottom: 20px;" onkeydown="if(event.key==='Enter') doLogin()">
+      <button style="width: 100%; font-size: 1rem; padding: 12px;" onclick="doLogin()">Đăng Nhập</button>
+      <div id="loginError">Sai tài khoản hoặc mật khẩu</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Quản Lý Dữ Liệu Chatbot</h1>
+        <p style="color: var(--text-muted); margin-top: 5px;">Thêm, sửa, xóa các câu hỏi & trả lời để bot học thêm kiến thức mới.</p>
+      </div>
+      <button onclick="openModal()">+ Thêm Câu Hỏi</button>
+    </div>
+
+    <div class="glass-panel">
+      <table>
+        <thead>
+          <tr>
+            <th width="30%">Câu hỏi chính</th>
+            <th width="20%">Biến thể (Từ khóa phụ)</th>
+            <th width="35%">Câu trả lời</th>
+            <th width="15%">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="4" style="text-align:center">Đang tải dữ liệu...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="qaModal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Thêm Câu Hỏi Mới</h2>
+      <input type="hidden" id="qaId">
+      <div class="form-group">
+        <label>Câu hỏi chính</label>
+        <input type="text" id="qaQuestion" placeholder="Ví dụ: Bệnh viện ở đâu?">
+      </div>
+      <div class="form-group">
+        <label>Các câu tương tự (phẩy để ngăn cách)</label>
+        <input type="text" id="qaVariants" placeholder="Ví dụ: địa chỉ, bv nằm ở đâu, cho xin địa chỉ">
+      </div>
+      <div class="form-group">
+        <label>Câu trả lời</label>
+        <textarea id="qaAnswer" placeholder="Nhập câu trả lời chính xác để bot tư vấn..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="closeModal()">Hủy</button>
+        <button type="button" onclick="saveQA()">Lưu cấu hình</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Thao tác thành công!</div>
+
+  <script>
+    let qaList = [];
+    const API_URL = '/api/qa';
+
+    // Đọc token từ localStorage
+    function getAuthToken() { return localStorage.getItem('botAuth') || ''; }
+    
+    // Gọi API bọc kèm token bảo mật
+    async function apiFetch(url, options = {}) {
+      if (!options.headers) options.headers = {};
+      const token = getAuthToken();
+      if (token) options.headers['Authorization'] = 'Basic ' + token;
+      
+      const res = await fetch(url, options);
+      if (res.status === 401) {
+        document.getElementById('loginScreen').classList.add('show');
+        throw new Error('Unauthorized');
+      }
+      return res;
+    }
+
+    // Xử lý nút Đăng nhập
+    async function doLogin() {
+      const em = document.getElementById('loginEmail').value.trim();
+      const pw = document.getElementById('loginPass').value.trim();
+      if (!em || !pw) return;
+      
+      const token = btoa(em + ':' + pw);
+      localStorage.setItem('botAuth', token); // Lưu nháp token
+      
+      try {
+        await loadData();
+        document.getElementById('loginError').style.display = 'none';
+      } catch(e) {
+        localStorage.removeItem('botAuth');
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    async function loadData() {
+      try {
+        const res = await apiFetch(API_URL);
+        qaList = await res.json();
+        document.getElementById('loginScreen').classList.remove('show');
+        renderTable();
+      } catch (err) {
+        if(err.message !== 'Unauthorized') {
+          document.getElementById('table-body').innerHTML = '<tr><td colspan="4" style="color:red">Lỗi tải dữ liệu. Hãy chắc chắn bot đang chạy.</td></tr>';
+        }
+      }
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+      
+      if(qaList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">Chưa có dữ liệu.</td></tr>';
+        return;
+      }
+
+      qaList.sort((a,b) => b.id - a.id).forEach(qa => {
+        const tr = document.createElement('tr');
+        
+        let variantsHtml = '';
+        if (qa.variants && qa.variants.length > 0) {
+          variantsHtml = qa.variants.map(v => `<span class="variants-tag">${v}</span>`).join('');
+        }
+
+        let shortAns = qa.answer.length > 80 ? qa.answer.substring(0, 80) + '...' : qa.answer;
+
+        tr.innerHTML = `
+          <td><strong>${qa.question}</strong></td>
+          <td>${variantsHtml}</td>
+          <td style="color:var(--text-muted)">${shortAns}</td>
+          <td>
+            <div class="actions">
+              <button onclick="openModal(${qa.id})" style="padding:6px 12px; font-size:0.8rem">Sửa</button>
+              <button onclick="deleteQA(${qa.id})" class="danger" style="padding:6px 12px; font-size:0.8rem">Xóa</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openModal(id = null) {
+      document.getElementById('qaModal').classList.add('show');
+      if (id) {
+        const qa = qaList.find(q => q.id === id);
+        document.getElementById('modalTitle').innerText = 'Sửa Câu Hỏi';
+        document.getElementById('qaId').value = qa.id;
+        document.getElementById('qaQuestion').value = qa.question;
+        document.getElementById('qaAnswer').value = qa.answer;
+        document.getElementById('qaVariants').value = (qa.variants || []).join(', ');
+      } else {
+        document.getElementById('modalTitle').innerText = 'Thêm Câu Hỏi Mới';
+        document.getElementById('qaId').value = '';
+        document.getElementById('qaQuestion').value = '';
+        document.getElementById('qaAnswer').value = '';
+        document.getElementById('qaVariants').value = '';
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('qaModal').classList.remove('show');
+    }
+
+    async function saveQA() {
+      const id = document.getElementById('qaId').value;
+      const question = document.getElementById('qaQuestion').value.trim();
+      const answer = document.getElementById('qaAnswer').value.trim();
+      const variantsStr = document.getElementById('qaVariants').value;
+      
+      if (!question || !answer) {
+        alert('Vui lòng nhập đủ câu hỏi và trả lời!');
+        return;
+      }
+
+      const variants = variantsStr.split(',').map(v => v.trim()).filter(v => v);
+      const payload = { question, answer, variants };
+
+      try {
+        if (id) {
+          await apiFetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          await apiFetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+        
+        closeModal();
+        showToast();
+        loadData();
+      } catch (err) {
+        alert('Có lỗi xảy ra: ' + err.message);
+      }
+    }
+
+    async function deleteQA(id) {
+      if(confirm('Bạn có chắc chắn muốn xóa câu hỏi này?')) {
+        try {
+          await apiFetch(`${API_URL}/${id}`, { method: 'DELETE' });
+          showToast();
+          loadData();
+        } catch (err) {
+          if(err.message !== 'Unauthorized') alert('Có lỗi xảy ra!');
+        }
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Init
+    loadData();
+  </script>
+</body>
+</html>
