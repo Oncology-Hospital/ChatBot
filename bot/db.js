@@ -1,6 +1,8 @@
 const sql = require('mssql');
 
 const database = process.env.MSSQL_DATABASE || 'QuanLyChatBot';
+const instanceName = process.env.MSSQL_INSTANCE || '';
+const port = process.env.MSSQL_PORT ? Number(process.env.MSSQL_PORT) : null;
 
 function quoteName(name) {
   if (!/^[A-Za-z0-9_]+$/.test(name)) {
@@ -11,7 +13,6 @@ function quoteName(name) {
 
 const baseConfig = {
   server: process.env.MSSQL_SERVER,
-  port: Number(process.env.MSSQL_PORT || 1433),
   user: process.env.MSSQL_USER,
   password: process.env.MSSQL_PASSWORD,
   options: {
@@ -24,6 +25,12 @@ const baseConfig = {
     idleTimeoutMillis: 30000,
   },
 };
+
+if (instanceName && !port) {
+  baseConfig.options.instanceName = instanceName;
+} else {
+  baseConfig.port = port || 1433;
+}
 
 let pool;
 let initialized = false;
