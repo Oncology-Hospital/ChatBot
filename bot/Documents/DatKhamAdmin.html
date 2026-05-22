@@ -98,28 +98,53 @@
       opacity: 0.55;
     }
 
-    .message {
-      margin: 12px 0;
-      padding: 11px 12px;
-      border-radius: 7px;
-      display: none;
-      white-space: pre-wrap;
+    .toast-wrap {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      z-index: 20;
+      display: grid;
+      gap: 10px;
+      width: min(360px, calc(100vw - 36px));
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
       border: 1px solid transparent;
-      font-size: 14px;
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(16, 24, 40, 0.14);
+      padding: 12px 14px;
+      background: #fff;
+      animation: toast-in 160ms ease-out;
     }
 
-    .ok {
+    .toast.ok {
       background: #eaf7ef;
-      color: #0b6b3f;
       border-color: #bee7cf;
-      display: block;
+      color: #0b6b3f;
     }
 
-    .err {
+    .toast.err {
       background: #fff0f0;
-      color: #9b1c1c;
       border-color: #ffd0d0;
-      display: block;
+      color: #9b1c1c;
+    }
+
+    .toast-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .toast-body {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .table-wrap {
@@ -257,7 +282,7 @@
       </div>
     </header>
 
-    <div id="msg" class="message"></div>
+    <div id="toast-root" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
     <div class="table-wrap">
       <table>
         <thead>
@@ -284,10 +309,22 @@
       return String(value).slice(0, 10);
     }
 
-    function setMsg(text, ok) {
-      const el = document.getElementById('msg');
-      el.textContent = text;
-      el.className = `message ${ok ? 'ok' : 'err'}`;
+    function showToast(title, body, ok = true) {
+      const root = document.getElementById('toast-root');
+      const item = document.createElement('div');
+      item.className = `toast ${ok ? 'ok' : 'err'}`;
+      item.innerHTML = `
+        <div class="toast-title">${esc(title)}</div>
+        ${body ? `<div class="toast-body">${esc(body)}</div>` : ''}
+      `;
+      root.appendChild(item);
+      window.setTimeout(() => item.remove(), 4200);
+    }
+
+    function logAction(label, payload) {
+      console.groupCollapsed(label);
+      console.log(payload);
+      console.groupEnd();
     }
 
     function esc(value) {
@@ -341,7 +378,7 @@
 
       const response = tryJson(row.YoumedResponse);
       if (response && response.message) {
-        return `<div class="small">${esc(response.message)}</div><div class="mono">${esc(JSON.stringify(response, null, 2))}</div>`;
+        return `<div class="small">${esc(response.message)}</div>`;
       }
 
       const check = tryJson(row.CheckResult);
@@ -411,10 +448,12 @@
     async function check(id) {
       try {
         const json = await api(`/api/admin/appointments/${id}/check`, { method: 'POST' });
-        setMsg(`Check #${id}: ${JSON.stringify(json.checkResult)}`, true);
+        logAction(`Check appointment #${id}`, json);
+        showToast(`Đã kiểm tra #${id}`, 'Chi tiết JSON đã được ghi trong Console.', true);
         await loadRows();
       } catch (err) {
-        setMsg(err.message, false);
+        console.error(`Check appointment #${id} failed`, err);
+        showToast(`Kiểm tra #${id} thất bại`, err.message, false);
       }
     }
 
@@ -422,10 +461,12 @@
       if (!confirm(`Duyệt và gửi đặt khám #${id} sang Youmed?`)) return;
       try {
         const json = await api(`/api/admin/appointments/${id}/approve`, { method: 'POST' });
-        setMsg(`Đã duyệt #${id}. Response: ${JSON.stringify(json.youmedResponse || {})}`, true);
+        logAction(`Approve appointment #${id}`, json);
+        showToast(`Đã duyệt #${id}`, 'Lịch đã được gửi sang Youmed. Chi tiết JSON đã được ghi trong Console.', true);
         await loadRows();
       } catch (err) {
-        setMsg(err.message, false);
+        console.error(`Approve appointment #${id} failed`, err);
+        showToast(`Duyệt #${id} thất bại`, err.message, false);
         await loadRows();
       }
     }
@@ -434,21 +475,26 @@
       const note = prompt('Lý do từ chối:', '');
       if (note === null) return;
       try {
-        await api(`/api/admin/appointments/${id}/reject`, {
+        const json = await api(`/api/admin/appointments/${id}/reject`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ note })
         });
-        setMsg(`Đã từ chối #${id}.`, true);
+        logAction(`Reject appointment #${id}`, json);
+        showToast(`Đã từ chối #${id}`, '', true);
         await loadRows();
       } catch (err) {
-        setMsg(err.message, false);
+        console.error(`Reject appointment #${id} failed`, err);
+        showToast(`Từ chối #${id} thất bại`, err.message, false);
       }
     }
 
     document.getElementById('reload').addEventListener('click', loadRows);
     document.getElementById('status').addEventListener('change', loadRows);
-    loadRows().catch(err => setMsg(err.message, false));
+    loadRows().catch(err => {
+      console.error('Load appointments failed', err);
+      showToast('Không tải được danh sách', err.message, false);
+    });
   </script>
 </body>
 </html>
