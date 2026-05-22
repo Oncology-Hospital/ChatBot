@@ -10,29 +10,34 @@ function clean(value) {
   return typeof value === 'string' ? value.trim() : value;
 }
 
+function cleanText(value) {
+  if (value === undefined || value === null) return '';
+  return String(value).trim();
+}
+
 function badRequest(res, message) {
   return res.status(400).json({ error: message });
 }
 
 function normalizeAppointment(body) {
   return {
-    conversationId: clean(body.conversationId || body.conversation_id || ''),
-    source: clean(body.source || 'web_form'),
-    mayte: clean(body.mayte || ''),
-    cccd: clean(body.cccd || ''),
-    tenbenhnhan: clean(body.tenbenhnhan || ''),
-    ngaysinh: clean(body.ngaysinh || ''),
-    namsinh: clean(body.namsinh || ''),
-    gioitinh: clean(body.gioitinh || ''),
-    sodienthoai: clean(body.sodienthoai || ''),
-    diachi: clean(body.diachi || ''),
-    madichvu: clean(body.madichvu || ''),
-    tendichvu: clean(body.tendichvu || body.tendichvu_his || body.tendichvu_ym || ''),
-    loaidichvu: clean(body.loaidichvu || ''),
-    ngaykham: clean(body.ngaykham || ''),
-    phongkham: clean(body.phongkham || ''),
-    doituong: clean(body.doituong || ''),
-    loaigia: clean(body.loaigia || ''),
+    conversationId: cleanText(body.conversationId || body.conversation_id || ''),
+    source: cleanText(body.source || 'web_form'),
+    mayte: cleanText(body.mayte || ''),
+    cccd: cleanText(body.cccd || ''),
+    tenbenhnhan: cleanText(body.tenbenhnhan || ''),
+    ngaysinh: cleanText(body.ngaysinh || ''),
+    namsinh: cleanText(body.namsinh || ''),
+    gioitinh: cleanText(body.gioitinh || ''),
+    sodienthoai: cleanText(body.sodienthoai || ''),
+    diachi: cleanText(body.diachi || ''),
+    madichvu: cleanText(body.madichvu || ''),
+    tendichvu: cleanText(body.tendichvu || body.tendichvu_his || body.tendichvu_ym || ''),
+    loaidichvu: cleanText(body.loaidichvu || ''),
+    ngaykham: cleanText(body.ngaykham || ''),
+    phongkham: cleanText(body.phongkham || ''),
+    doituong: cleanText(body.doituong || ''),
+    loaigia: cleanText(body.loaigia || ''),
     gia: body.gia === '' || body.gia === undefined ? null : Number(body.gia),
   };
 }
