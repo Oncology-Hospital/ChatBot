@@ -18,7 +18,12 @@
     }
     h1 {
       font-size: 24px;
+      margin: 0 0 6px;
+    }
+    .lead {
+      color: #5d687b;
       margin: 0 0 18px;
+      line-height: 1.5;
     }
     section {
       background: #fff;
@@ -54,6 +59,10 @@
       color: #172033;
       border: 1px solid #c8d0df;
     }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -68,18 +77,81 @@
     }
     .ok { background: #e9f8ef; color: #136f34; display: block; }
     .err { background: #fdecec; color: #9b1c1c; display: block; }
+    .info { background: #edf4ff; color: #174ea6; display: block; }
+    .warn { background: #fff6df; color: #7a4d00; display: block; }
     .muted { color: #5d687b; font-size: 13px; }
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .section-note {
+      color: #5d687b;
+      font-size: 13px;
+      margin: 4px 0 0;
+    }
+    .badge {
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: #eef2f8;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge.ok {
+      display: inline-block;
+      background: #e9f8ef;
+      color: #136f34;
+    }
+    .empty-state {
+      border: 1px dashed #c8d0df;
+      border-radius: 8px;
+      padding: 14px;
+      color: #5d687b;
+      background: #fafcff;
+      font-size: 14px;
+    }
+    fieldset {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      min-width: 0;
+    }
+    fieldset:disabled {
+      opacity: 0.58;
+    }
+    .hidden {
+      display: none;
+    }
     @media (max-width: 640px) {
       main { padding: 14px; }
       .grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .badge { display: inline-block; margin-top: 8px; }
     }
   </style>
 </head>
 <body>
   <main>
     <h1>Đặt lịch khám</h1>
+    <p class="lead">Tra cứu bệnh nhân bằng CCCD hoặc mã y tế, sau đó chọn dịch vụ và ngày khám. Yêu cầu sẽ được gửi đến nhân viên để duyệt trước khi đặt lịch chính thức.</p>
 
     <section>
+      <div class="section-head">
+        <div>
+          <p class="section-title">1. Tra cứu bệnh nhân</p>
+          <p class="section-note">Thông tin bệnh nhân phải tồn tại trong hệ thống trước khi gửi yêu cầu đặt lịch.</p>
+        </div>
+        <span id="lookupBadge" class="badge">Chưa tra cứu</span>
+      </div>
       <div class="grid">
         <div>
           <label for="cccd">CCCD</label>
@@ -96,50 +168,67 @@
 
     <form id="bookingForm">
       <section>
-        <div class="grid">
+        <div class="section-head">
           <div>
-            <label for="mayte">Mã y tế</label>
-            <input id="mayte" name="mayte" required>
-          </div>
-          <div>
-            <label for="tenbenhnhan">Họ tên</label>
-            <input id="tenbenhnhan" name="tenbenhnhan">
-          </div>
-          <div>
-            <label for="ngaysinh">Ngày sinh</label>
-            <input id="ngaysinh" name="ngaysinh" placeholder="dd/mm/yyyy">
-          </div>
-          <div>
-            <label for="sodienthoai">Số điện thoại</label>
-            <input id="sodienthoai" name="sodienthoai" inputmode="tel">
+            <p class="section-title">2. Thông tin bệnh nhân</p>
+            <p class="section-note">Phần này được tự động điền sau khi tra cứu thành công.</p>
           </div>
         </div>
-        <label for="diachi">Địa chỉ</label>
-        <textarea id="diachi" name="diachi" rows="2"></textarea>
+        <div id="patientEmpty" class="empty-state">Chưa có thông tin bệnh nhân. Vui lòng tra cứu CCCD hoặc mã y tế ở bước 1.</div>
+        <fieldset id="patientFields" class="hidden" disabled>
+          <div class="grid">
+            <div>
+              <label for="mayte">Mã y tế</label>
+              <input id="mayte" name="mayte" required>
+            </div>
+            <div>
+              <label for="tenbenhnhan">Họ tên</label>
+              <input id="tenbenhnhan" name="tenbenhnhan">
+            </div>
+            <div>
+              <label for="ngaysinh">Ngày sinh</label>
+              <input id="ngaysinh" name="ngaysinh" placeholder="dd/mm/yyyy">
+            </div>
+            <div>
+              <label for="sodienthoai">Số điện thoại</label>
+              <input id="sodienthoai" name="sodienthoai" inputmode="tel">
+            </div>
+          </div>
+          <label for="diachi">Địa chỉ</label>
+          <textarea id="diachi" name="diachi" rows="2"></textarea>
+        </fieldset>
       </section>
 
       <section>
-        <label for="service">Dịch vụ</label>
-        <select id="service" required>
-          <option value="">Đang tải danh sách dịch vụ...</option>
-        </select>
-
-        <div class="grid">
+        <div class="section-head">
           <div>
-            <label for="ngaykham">Ngày khám</label>
-            <select id="ngaykham" name="ngaykham" required>
-              <option value="">Chọn dịch vụ trước</option>
-            </select>
-          </div>
-          <div>
-            <label for="phongkham">Phòng khám</label>
-            <input id="phongkham" name="phongkham" readonly>
+            <p class="section-title">3. Chọn lịch khám</p>
+            <p class="section-note">Chỉ chọn được các ngày có trong lịch của dịch vụ.</p>
           </div>
         </div>
-        <p id="serviceMeta" class="muted"></p>
+        <fieldset id="scheduleFields" disabled>
+          <label for="service">Dịch vụ</label>
+          <select id="service" required>
+            <option value="">Đang tải danh sách dịch vụ...</option>
+          </select>
+
+          <div class="grid">
+            <div>
+              <label for="ngaykham">Ngày khám</label>
+              <select id="ngaykham" name="ngaykham" required>
+                <option value="">Chọn dịch vụ trước</option>
+              </select>
+            </div>
+            <div>
+              <label for="phongkham">Phòng khám</label>
+              <input id="phongkham" name="phongkham" readonly>
+            </div>
+          </div>
+          <p id="serviceMeta" class="muted"></p>
+        </fieldset>
       </section>
 
-      <button type="submit">Gửi yêu cầu chờ duyệt</button>
+      <button id="submitBtn" type="submit" disabled>Gửi yêu cầu chờ duyệt</button>
       <div id="submitMsg" class="message"></div>
     </form>
   </main>
@@ -149,11 +238,49 @@
     const conversationId = params.get('conversation_id') || params.get('conversationId') || '';
     let services = [];
     let selectedService = null;
+    let patientFound = false;
 
-    function setMsg(id, text, ok) {
+    function setMsg(id, text, type) {
       const el = document.getElementById(id);
       el.textContent = text;
-      el.className = `message ${ok ? 'ok' : 'err'}`;
+      el.className = `message ${type}`;
+    }
+
+    function clearMsg(id) {
+      const el = document.getElementById(id);
+      el.textContent = '';
+      el.className = 'message';
+    }
+
+    function setLookupState(state) {
+      const badge = document.getElementById('lookupBadge');
+      if (state === 'found') {
+        badge.textContent = 'Đã xác minh';
+        badge.className = 'badge ok';
+      } else if (state === 'loading') {
+        badge.textContent = 'Đang tra cứu';
+        badge.className = 'badge';
+      } else {
+        badge.textContent = 'Chưa tra cứu';
+        badge.className = 'badge';
+      }
+    }
+
+    function clearPatient() {
+      patientFound = false;
+      ['mayte', 'tenbenhnhan', 'ngaysinh', 'sodienthoai', 'diachi', 'phongkham'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('patientEmpty').classList.remove('hidden');
+      document.getElementById('patientFields').classList.add('hidden');
+      document.getElementById('patientFields').disabled = true;
+      document.getElementById('scheduleFields').disabled = true;
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('service').value = '';
+      document.getElementById('ngaykham').innerHTML = '<option value="">Chọn dịch vụ trước</option>';
+      document.getElementById('serviceMeta').textContent = '';
+      selectedService = null;
+      setLookupState('idle');
     }
 
     function fillPatient(patient) {
@@ -163,6 +290,13 @@
       document.getElementById('sodienthoai').value = patient.sodienthoai || '';
       document.getElementById('diachi').value = patient.diachi || '';
       document.getElementById('cccd').value = patient.cccd || document.getElementById('cccd').value;
+      patientFound = true;
+      document.getElementById('patientEmpty').classList.add('hidden');
+      document.getElementById('patientFields').classList.remove('hidden');
+      document.getElementById('patientFields').disabled = false;
+      document.getElementById('scheduleFields').disabled = false;
+      document.getElementById('submitBtn').disabled = false;
+      setLookupState('found');
     }
 
     async function loadServices() {
@@ -179,14 +313,44 @@
     document.getElementById('lookupBtn').addEventListener('click', async () => {
       const cccd = document.getElementById('cccd').value.trim();
       const mayte = document.getElementById('mayte_lookup').value.trim();
-      if (!cccd && !mayte) return setMsg('lookupMsg', 'Vui lòng nhập CCCD hoặc mã y tế.', false);
-      const res = await fetch(`/api/appointments/patient?mayte=${encodeURIComponent(mayte)}&cccd=${encodeURIComponent(cccd)}`);
-      const json = await res.json();
-      if (!res.ok || json.code !== 'success') {
-        return setMsg('lookupMsg', json.message || json.error || 'Không tìm thấy bệnh nhân.', false);
+      if (!cccd && !mayte) return setMsg('lookupMsg', 'Vui lòng nhập CCCD hoặc mã y tế.', 'err');
+      if (cccd && !/^\d{12}$/.test(cccd)) return setMsg('lookupMsg', 'CCCD phải gồm đúng 12 chữ số.', 'err');
+
+      clearPatient();
+      clearMsg('submitMsg');
+      setLookupState('loading');
+      document.getElementById('lookupBtn').disabled = true;
+      document.getElementById('lookupBtn').textContent = 'Đang tra cứu...';
+      setMsg('lookupMsg', 'Đang kiểm tra thông tin bệnh nhân trong hệ thống...', 'info');
+
+      try {
+        const res = await fetch(`/api/appointments/patient?mayte=${encodeURIComponent(mayte)}&cccd=${encodeURIComponent(cccd)}`);
+        const json = await res.json();
+        if (!res.ok || json.code !== 'success' || !json.data || !json.data.benhnhan) {
+          const message = json.message && !json.message.includes('Request failed')
+            ? json.message
+            : 'Không tìm thấy hồ sơ bệnh nhân với thông tin vừa nhập.';
+          setMsg('lookupMsg', `${message}\nVui lòng kiểm tra lại CCCD/mã y tế. Nếu bệnh nhân chưa có hồ sơ, nhân viên cần tạo hồ sơ trước khi đặt lịch.`, 'warn');
+          setLookupState('idle');
+          return;
+        }
+        fillPatient(json.data.benhnhan);
+        setMsg('lookupMsg', 'Đã tìm thấy bệnh nhân. Vui lòng kiểm tra thông tin bên dưới trước khi chọn lịch khám.', 'ok');
+      } catch (err) {
+        clearPatient();
+        setMsg('lookupMsg', 'Không thể tra cứu lúc này. Vui lòng thử lại sau hoặc liên hệ nhân viên hỗ trợ.', 'err');
+      } finally {
+        document.getElementById('lookupBtn').disabled = false;
+        document.getElementById('lookupBtn').textContent = 'Tra thông tin bệnh nhân';
       }
-      fillPatient(json.data.benhnhan);
-      setMsg('lookupMsg', 'Đã tìm thấy và điền thông tin bệnh nhân.', true);
+    });
+
+    ['cccd', 'mayte_lookup'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        if (!patientFound) return;
+        clearPatient();
+        setMsg('lookupMsg', 'Thông tin tra cứu đã thay đổi. Vui lòng tra cứu lại trước khi gửi yêu cầu.', 'info');
+      });
     });
 
     document.getElementById('service').addEventListener('change', e => {
@@ -212,8 +376,9 @@
 
     document.getElementById('bookingForm').addEventListener('submit', async e => {
       e.preventDefault();
+      if (!patientFound) return setMsg('submitMsg', 'Vui lòng tra cứu và xác minh bệnh nhân trước khi gửi yêu cầu.', 'err');
       const lich = selectedService && selectedService.lichkhams ? selectedService.lichkhams[Number(document.getElementById('ngaykham').value)] : null;
-      if (!selectedService || !lich) return setMsg('submitMsg', 'Vui lòng chọn dịch vụ và ngày khám.', false);
+      if (!selectedService || !lich) return setMsg('submitMsg', 'Vui lòng chọn dịch vụ và ngày khám.', 'err');
 
       const payload = {
         conversationId,
@@ -241,14 +406,15 @@
         body: JSON.stringify(payload)
       });
       const json = await res.json();
-      if (!res.ok) return setMsg('submitMsg', json.error || 'Gửi yêu cầu thất bại.', false);
-      setMsg('submitMsg', `Đã gửi yêu cầu #${json.appointment.Id}. Vui lòng chờ admin duyệt.`, true);
+      if (!res.ok) return setMsg('submitMsg', json.error || 'Gửi yêu cầu thất bại.', 'err');
+      setMsg('submitMsg', `Đã gửi yêu cầu #${json.appointment.Id}. Vui lòng chờ admin duyệt.`, 'ok');
     });
 
     loadServices().catch(err => {
       document.getElementById('service').innerHTML = '<option value="">Không tải được dịch vụ</option>';
-      setMsg('submitMsg', err.message, false);
+      setMsg('submitMsg', err.message, 'err');
     });
+    clearPatient();
   </script>
 </body>
 </html>
