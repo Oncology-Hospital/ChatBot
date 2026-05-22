@@ -1,15 +1,18 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env'), quiet: true });
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const fs = require('fs');
-const path = require('path');
 const QAMatcher = require('./matcher');
+const registerAppointmentRoutes = require('./appointmentRoutes');
 
 // ─── Config ───
 const PORT = 4000;
 const CHATWOOT_URL = process.env.CHATWOOT_URL || (process.env.NODE_ENV === 'production' ? 'https://adminchatbot.dienisme.online' : 'http://localhost:3000');
 const CHATWOOT_API_TOKEN = process.env.CHATWOOT_API_TOKEN || 'S4XGRoN3JBvc2aS9nofJKMWX';
 const ACCOUNT_ID = process.env.CHATWOOT_ACCOUNT_ID || 1;
+const BOT_PUBLIC_URL = (process.env.BOT_PUBLIC_URL || 'http://localhost:4000').replace(/\/+$/, '');
 const CONFIDENCE_HIGH = 0.5;   // auto-answer (Cosine Similarity)
 const CONFIDENCE_MED = 0.3;    // suggest similar questions (Cosine Similarity)
 const QA_FILE = path.join(__dirname, 'qa-data.json');
@@ -85,6 +88,34 @@ async function sendMessage(conversationId, message) {
   }
 }
 
+registerAppointmentRoutes(app, { auth, sendMessage });
+
+function normalizeForIntent(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd');
+}
+
+function isAppointmentIntent(content) {
+  const text = normalizeForIntent(content);
+  return [
+    'dat lich',
+    'dang ky kham',
+    'dat kham',
+    'lich kham',
+    'hen kham',
+    'kham benh',
+  ].some(keyword => text.includes(keyword));
+}
+
+function appointmentLink(conversationId) {
+  const url = new URL('/dat-kham', BOT_PUBLIC_URL);
+  url.searchParams.set('conversation_id', conversationId);
+  return url.toString();
+}
+
 async function assignToTeam(conversationId) {
   try {
     // Toggle status to "open" so agents see it
@@ -145,6 +176,15 @@ app.post('/webhook', async (req, res) => {
     console.log('🔄 Escalating to staff...');
     await sendMessage(conversationId, '🔄 Đã liên hệ với nhân viên, vui lòng chờ phản hồi...');
     await assignToTeam(conversationId);
+    return;
+  }
+
+  if (isAppointmentIntent(content)) {
+    const link = appointmentLink(conversationId);
+    await sendMessage(
+      conversationId,
+      `Bạn có thể gửi yêu cầu đặt lịch khám tại đây:\n${link}\n\nSau khi gửi, admin sẽ kiểm tra và duyệt trước khi lịch được ghi vào hệ thống.`
+    );
     return;
   }
 
