@@ -5,102 +5,252 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Duyệt đặt lịch khám</title>
   <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --line: #d9e1ee;
+      --line-soft: #e8edf5;
+      --text: #172033;
+      --muted: #667085;
+      --blue: #1267d8;
+      --green: #087443;
+      --amber: #a15c07;
+      --red: #b42318;
+      --slate: #475467;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f6fa;
-      color: #182234;
+      background: var(--bg);
+      color: var(--text);
     }
+
     main {
-      max-width: 1180px;
+      max-width: 1220px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 28px 24px 48px;
     }
+
     header {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 16px;
+      margin-bottom: 18px;
     }
-    h1 { font-size: 24px; margin: 0; }
+
+    h1 {
+      font-size: 26px;
+      line-height: 1.15;
+      margin: 0 0 6px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
     select, button, textarea {
       border: 1px solid #c8d0df;
       border-radius: 6px;
-      padding: 9px 10px;
+      padding: 9px 11px;
       font-size: 14px;
     }
+
+    select {
+      min-width: 142px;
+      background: #fff;
+    }
+
     button {
+      min-height: 38px;
       cursor: pointer;
-      background: #1267d8;
+      background: var(--blue);
       color: #fff;
       border: 0;
       font-weight: 700;
+      white-space: nowrap;
     }
+
+    button.secondary {
+      background: #eef2f8;
+      color: #1e293b;
+      border: 1px solid #c8d0df;
+    }
+
+    button.danger { background: var(--red); }
+
     button:disabled {
       cursor: not-allowed;
       opacity: 0.55;
     }
-    button.secondary { background: #eef2f8; color: #1e293b; border: 1px solid #c8d0df; }
-    button.danger { background: #b42318; }
+
+    .message {
+      margin: 12px 0;
+      padding: 11px 12px;
+      border-radius: 7px;
+      display: none;
+      white-space: pre-wrap;
+      border: 1px solid transparent;
+      font-size: 14px;
+    }
+
+    .ok {
+      background: #eaf7ef;
+      color: #0b6b3f;
+      border-color: #bee7cf;
+      display: block;
+    }
+
+    .err {
+      background: #fff0f0;
+      color: #9b1c1c;
+      border-color: #ffd0d0;
+      display: block;
+    }
+
     .table-wrap {
       overflow-x: auto;
-      background: #fff;
-      border: 1px solid #d8deea;
+      background: var(--panel);
+      border: 1px solid var(--line);
       border-radius: 8px;
+      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1080px;
+      min-width: 1120px;
     }
+
     th, td {
-      border-bottom: 1px solid #e4e8f0;
-      padding: 10px;
+      border-bottom: 1px solid var(--line-soft);
+      padding: 12px 10px;
       text-align: left;
       vertical-align: top;
       font-size: 13px;
     }
+
     th {
       background: #f8fafc;
       color: #465367;
+      font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
+
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #fbfdff; }
+
+    .id-col { width: 56px; }
+    .status-col { width: 132px; }
+    .patient-col { width: 250px; }
+    .service-col { width: 220px; }
+    .schedule-col { width: 180px; }
+    .result-col { width: 260px; }
+    .actions-col { width: 150px; }
+
+    .patient-name,
+    .service-name {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .line {
+      margin: 2px 0;
+      color: #1f2a3d;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .mono {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .status-pending { background: #eef4ff; color: #175cd3; }
+    .status-submitted { background: #eaf7ef; color: var(--green); }
+    .status-failed { background: #fff4e5; color: var(--amber); }
+    .status-rejected { background: #fff0f0; color: var(--red); }
+
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
+      align-items: center;
     }
-    .pill {
+
+    .actions button {
+      min-width: 76px;
+      padding: 9px 10px;
+    }
+
+    .final-state {
       display: inline-block;
-      border-radius: 999px;
-      padding: 3px 8px;
-      background: #edf2ff;
-      color: #264ea8;
-      font-weight: 700;
+      color: var(--muted);
       font-size: 12px;
+      line-height: 1.45;
     }
-    .message {
-      margin: 12px 0;
-      padding: 10px 12px;
-      border-radius: 6px;
-      display: none;
-      white-space: pre-wrap;
+
+    .empty {
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--muted);
     }
-    .ok { background: #e9f8ef; color: #136f34; display: block; }
-    .err { background: #fdecec; color: #9b1c1c; display: block; }
-    .small { color: #5d687b; font-size: 12px; line-height: 1.45; }
+
+    @media (max-width: 760px) {
+      main { padding: 20px 12px 36px; }
+      header { align-items: stretch; flex-direction: column; }
+      .toolbar { justify-content: flex-start; }
+      select, button { width: 100%; }
+    }
   </style>
 </head>
 <body>
   <main>
     <header>
-      <h1>Duyệt đặt lịch khám</h1>
       <div>
-        <select id="status">
-          <option value="pending">Pending</option>
-          <option value="submitted">Submitted</option>
-          <option value="failed">Failed</option>
-          <option value="rejected">Rejected</option>
+        <h1>Duyệt đặt lịch khám</h1>
+        <p class="subtitle">Xem yêu cầu từ chatbot, kiểm tra lịch cho bệnh nhân đã có mã y tế và duyệt để gửi sang Youmed.</p>
+      </div>
+      <div class="toolbar">
+        <select id="status" aria-label="Lọc trạng thái">
+          <option value="pending">Chờ duyệt</option>
+          <option value="submitted">Đã đặt</option>
+          <option value="failed">Lỗi</option>
+          <option value="rejected">Đã từ chối</option>
           <option value="">Tất cả</option>
         </select>
         <button id="reload" class="secondary">Tải lại</button>
@@ -112,17 +262,17 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Trạng thái</th>
-            <th>Bệnh nhân</th>
-            <th>Dịch vụ</th>
-            <th>Lịch</th>
-            <th>Kết quả</th>
-            <th>Thao tác</th>
+            <th class="id-col">ID</th>
+            <th class="status-col">Trạng thái</th>
+            <th class="patient-col">Bệnh nhân</th>
+            <th class="service-col">Dịch vụ</th>
+            <th class="schedule-col">Lịch</th>
+            <th class="result-col">Kết quả</th>
+            <th class="actions-col">Thao tác</th>
           </tr>
         </thead>
         <tbody id="rows">
-          <tr><td colspan="7">Đang tải...</td></tr>
+          <tr><td colspan="7" class="empty">Đang tải...</td></tr>
         </tbody>
       </table>
     </div>
@@ -146,6 +296,33 @@
       }[ch]));
     }
 
+    function statusLabel(status) {
+      return {
+        pending: 'Chờ duyệt',
+        submitted: 'Đã đặt',
+        failed: 'Lỗi',
+        rejected: 'Đã từ chối'
+      }[status] || status || '';
+    }
+
+    function statusClass(status) {
+      return {
+        pending: 'status-pending',
+        submitted: 'status-submitted',
+        failed: 'status-failed',
+        rejected: 'status-rejected'
+      }[status] || 'status-pending';
+    }
+
+    function tryJson(value) {
+      if (!value) return null;
+      try {
+        return JSON.parse(value);
+      } catch (_) {
+        return null;
+      }
+    }
+
     async function api(url, options) {
       const res = await fetch(url, options);
       const json = await res.json().catch(() => ({}));
@@ -153,40 +330,72 @@
       return json;
     }
 
+    function resultHtml(row) {
+      if (row.MaDatCho) {
+        return [
+          `<div class="line"><strong>Mã đặt chỗ:</strong> ${esc(row.MaDatCho)}</div>`,
+          `<div class="line"><strong>STT:</strong> ${esc(row.STT)}</div>`,
+          `<div class="line"><strong>Giờ khám:</strong> ${esc(row.GioKham)}</div>`
+        ].join('');
+      }
+
+      const response = tryJson(row.YoumedResponse);
+      if (response && response.message) {
+        return `<div class="small">${esc(response.message)}</div><div class="mono">${esc(JSON.stringify(response, null, 2))}</div>`;
+      }
+
+      const check = tryJson(row.CheckResult);
+      if (check && check.message) {
+        return `<div class="small">${esc(check.message)}</div>`;
+      }
+
+      return row.CheckResult
+        ? `<div class="mono">${esc(row.CheckResult)}</div>`
+        : '<span class="small">Chưa có kết quả.</span>';
+    }
+
+    function actionHtml(row) {
+      if (row.Status !== 'pending') {
+        return `<span class="final-state">Yêu cầu đã ở trạng thái "${esc(statusLabel(row.Status))}". Không còn thao tác.</span>`;
+      }
+
+      const hasMayTe = Boolean(row.MayTe);
+      return `
+        <div class="actions">
+          <button class="secondary" onclick="check(${row.Id})" ${hasMayTe ? '' : 'disabled title="Bệnh nhân mới cần bấm Duyệt để tạo hồ sơ trước"'}>Kiểm tra</button>
+          <button onclick="approve(${row.Id})">Duyệt</button>
+          <button class="danger" onclick="reject(${row.Id})">Từ chối</button>
+        </div>
+      `;
+    }
+
     function rowHtml(row) {
       const hasMayTe = Boolean(row.MayTe);
-      const result = row.MaDatCho
-        ? `Mã đặt chỗ: ${esc(row.MaDatCho)}<br>STT: ${esc(row.STT)}<br>Giờ: ${esc(row.GioKham)}`
-        : `<span class="small">${esc(row.CheckResult || '')}</span>`;
-
       return `<tr>
         <td>#${row.Id}</td>
-        <td><span class="pill">${esc(row.Status)}</span><br><span class="small">${esc(row.CreatedAt)}</span></td>
         <td>
-          <strong>${esc(row.TenBenhNhan)}</strong><br>
-          Mã y tế: ${hasMayTe ? esc(row.MayTe) : '<span class="small">Bệnh nhân mới, chưa có mã y tế</span>'}<br>
-          CCCD: ${esc(row.Cccd)}<br>
-          SĐT: ${esc(row.SoDienThoai)}
+          <span class="pill ${statusClass(row.Status)}">${esc(statusLabel(row.Status))}</span>
+          <div class="small">${esc(row.CreatedAt)}</div>
         </td>
         <td>
-          <strong>${esc(row.TenDichVu)}</strong><br>
-          Mã: ${esc(row.MaDichVu)}<br>
-          Loại: ${esc(row.LoaiDichVu)}<br>
-          Giá: ${Number(row.Gia || 0).toLocaleString('vi-VN')}đ
+          <span class="patient-name">${esc(row.TenBenhNhan)}</span>
+          <div class="line">Mã y tế: ${hasMayTe ? esc(row.MayTe) : '<span class="small">Bệnh nhân mới, chưa có mã y tế</span>'}</div>
+          <div class="line">CCCD: ${esc(row.Cccd)}</div>
+          <div class="line">SĐT: ${esc(row.SoDienThoai)}</div>
         </td>
         <td>
-          Ngày: ${esc(fmtDate(row.NgayKham))}<br>
-          Phòng: ${esc(row.PhongKham)}<br>
-          Đối tượng: ${esc(row.DoiTuong)} / Loại giá: ${esc(row.LoaiGia)}
+          <span class="service-name">${esc(row.TenDichVu)}</span>
+          <div class="line">Mã: ${esc(row.MaDichVu)}</div>
+          <div class="line">Loại: ${esc(row.LoaiDichVu)}</div>
+          <div class="line">Giá: ${Number(row.Gia || 0).toLocaleString('vi-VN')}đ</div>
         </td>
-        <td>${result}</td>
         <td>
-          <div class="actions">
-            <button class="secondary" onclick="check(${row.Id})" ${hasMayTe ? '' : 'disabled title="Bệnh nhân mới cần bấm Duyệt để tạo hồ sơ trước"'}>Kiểm tra</button>
-            <button onclick="approve(${row.Id})">Duyệt</button>
-            <button class="danger" onclick="reject(${row.Id})">Từ chối</button>
-          </div>
+          <div class="line">Ngày: ${esc(fmtDate(row.NgayKham))}</div>
+          <div class="line">Phòng: ${esc(row.PhongKham)}</div>
+          <div class="line">Đối tượng: ${esc(row.DoiTuong)} / Loại giá: ${esc(row.LoaiGia)}</div>
         </td>
+        <td>${resultHtml(row)}</td>
+        <td>${actionHtml(row)}</td>
       </tr>`;
     }
 
@@ -196,7 +405,7 @@
       const rows = document.getElementById('rows');
       rows.innerHTML = json.appointments.length
         ? json.appointments.map(rowHtml).join('')
-        : '<tr><td colspan="7">Không có yêu cầu.</td></tr>';
+        : '<tr><td colspan="7" class="empty">Không có yêu cầu phù hợp.</td></tr>';
     }
 
     async function check(id) {
