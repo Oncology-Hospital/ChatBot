@@ -37,6 +37,7 @@ const auth = async (req, res, next) => {
   const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
 
   if (!login || !password) {
+    res.set('WWW-Authenticate', 'Basic realm="DatKhamAdmin"');
     return res.status(401).send('Yeu cau dang nhap.');
   }
 
@@ -55,6 +56,7 @@ const auth = async (req, res, next) => {
       return next();
     }
   } catch (err) {
+    res.set('WWW-Authenticate', 'Basic realm="DatKhamAdmin"');
     return res.status(401).send('Sai tai khoan luon.');
   }
 };
