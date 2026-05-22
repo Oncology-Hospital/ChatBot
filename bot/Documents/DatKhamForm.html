@@ -228,8 +228,8 @@
         </fieldset>
       </section>
 
-      <button id="submitBtn" type="submit" disabled>Gửi yêu cầu chờ duyệt</button>
       <div id="submitMsg" class="message"></div>
+      <button id="submitBtn" type="submit" disabled>Gửi yêu cầu chờ duyệt</button>
     </form>
   </main>
 
@@ -244,6 +244,23 @@
       const el = document.getElementById(id);
       el.textContent = text;
       el.className = `message ${type}`;
+    }
+
+    function setSubmitMsg(text, type) {
+      setMsg('submitMsg', text, type);
+      document.getElementById('submitMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function formatSubmitError(json) {
+      if (!json) return 'Gửi yêu cầu thất bại. Vui lòng thử lại.';
+      const parts = [json.error || json.message || 'Gửi yêu cầu thất bại.'];
+      if (json.checkResult && json.checkResult.message && json.checkResult.message !== 'success') {
+        parts.push(`Chi tiết: ${json.checkResult.message}`);
+      }
+      if (json.checkResult && json.checkResult.data === false) {
+        parts.push('Lịch này hiện không còn khả dụng. Vui lòng chọn ngày hoặc dịch vụ khác.');
+      }
+      return parts.join('\n');
     }
 
     function clearMsg(id) {
@@ -376,9 +393,9 @@
 
     document.getElementById('bookingForm').addEventListener('submit', async e => {
       e.preventDefault();
-      if (!patientFound) return setMsg('submitMsg', 'Vui lòng tra cứu và xác minh bệnh nhân trước khi gửi yêu cầu.', 'err');
+      if (!patientFound) return setSubmitMsg('Vui lòng tra cứu và xác minh bệnh nhân trước khi gửi yêu cầu.', 'err');
       const lich = selectedService && selectedService.lichkhams ? selectedService.lichkhams[Number(document.getElementById('ngaykham').value)] : null;
-      if (!selectedService || !lich) return setMsg('submitMsg', 'Vui lòng chọn dịch vụ và ngày khám.', 'err');
+      if (!selectedService || !lich) return setSubmitMsg('Vui lòng chọn dịch vụ và ngày khám.', 'err');
 
       const payload = {
         conversationId,
@@ -400,14 +417,25 @@
         gia: selectedService.gia
       };
 
-      const res = await fetch('/api/appointments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const json = await res.json();
-      if (!res.ok) return setMsg('submitMsg', json.error || 'Gửi yêu cầu thất bại.', 'err');
-      setMsg('submitMsg', `Đã gửi yêu cầu #${json.appointment.Id}. Vui lòng chờ admin duyệt.`, 'ok');
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Đang kiểm tra lịch...';
+      setSubmitMsg('Đang kiểm tra lịch khám trước khi gửi yêu cầu...', 'info');
+      try {
+        const res = await fetch('/api/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) return setSubmitMsg(formatSubmitError(json), 'err');
+        setSubmitMsg(`Đã gửi yêu cầu #${json.appointment.Id}. Vui lòng chờ admin duyệt.`, 'ok');
+      } catch (err) {
+        setSubmitMsg('Không gửi được yêu cầu lúc này. Vui lòng thử lại sau hoặc liên hệ nhân viên hỗ trợ.', 'err');
+      } finally {
+        submitBtn.disabled = !patientFound;
+        submitBtn.textContent = 'Gửi yêu cầu chờ duyệt';
+      }
     });
 
     loadServices().catch(err => {
