@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duyệt đặt lịch khám</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      color: #182234;
+    }
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    h1 { font-size: 24px; margin: 0; }
+    select, button, textarea {
+      border: 1px solid #c8d0df;
+      border-radius: 6px;
+      padding: 9px 10px;
+      font-size: 14px;
+    }
+    button {
+      cursor: pointer;
+      background: #1267d8;
+      color: #fff;
+      border: 0;
+      font-weight: 700;
+    }
+    button.secondary { background: #eef2f8; color: #1e293b; border: 1px solid #c8d0df; }
+    button.danger { background: #b42318; }
+    .table-wrap {
+      overflow-x: auto;
+      background: #fff;
+      border: 1px solid #d8deea;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1080px;
+    }
+    th, td {
+      border-bottom: 1px solid #e4e8f0;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+    th {
+      background: #f8fafc;
+      color: #465367;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #edf2ff;
+      color: #264ea8;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .message {
+      margin: 12px 0;
+      padding: 10px 12px;
+      border-radius: 6px;
+      display: none;
+      white-space: pre-wrap;
+    }
+    .ok { background: #e9f8ef; color: #136f34; display: block; }
+    .err { background: #fdecec; color: #9b1c1c; display: block; }
+    .small { color: #5d687b; font-size: 12px; line-height: 1.45; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Duyệt đặt lịch khám</h1>
+      <div>
+        <select id="status">
+          <option value="pending">Pending</option>
+          <option value="submitted">Submitted</option>
+          <option value="failed">Failed</option>
+          <option value="rejected">Rejected</option>
+          <option value="">Tất cả</option>
+        </select>
+        <button id="reload" class="secondary">Tải lại</button>
+      </div>
+    </header>
+
+    <div id="msg" class="message"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Trạng thái</th>
+            <th>Bệnh nhân</th>
+            <th>Dịch vụ</th>
+            <th>Lịch</th>
+            <th>Kết quả</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr><td colspan="7">Đang tải...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    function fmtDate(value) {
+      if (!value) return '';
+      return String(value).slice(0, 10);
+    }
+
+    function setMsg(text, ok) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.className = `message ${ok ? 'ok' : 'err'}`;
+    }
+
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[ch]));
+    }
+
+    async function api(url, options) {
+      const res = await fetch(url, options);
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || JSON.stringify(json));
+      return json;
+    }
+
+    function rowHtml(row) {
+      const result = row.MaDatCho
+        ? `Mã đặt chỗ: ${esc(row.MaDatCho)}<br>STT: ${esc(row.STT)}<br>Giờ: ${esc(row.GioKham)}`
+        : `<span class="small">${esc(row.CheckResult || '')}</span>`;
+
+      return `<tr>
+        <td>#${row.Id}</td>
+        <td><span class="pill">${esc(row.Status)}</span><br><span class="small">${esc(row.CreatedAt)}</span></td>
+        <td>
+          <strong>${esc(row.TenBenhNhan)}</strong><br>
+          Mã y tế: ${esc(row.MayTe)}<br>
+          CCCD: ${esc(row.Cccd)}<br>
+          SĐT: ${esc(row.SoDienThoai)}
+        </td>
+        <td>
+          <strong>${esc(row.TenDichVu)}</strong><br>
+          Mã: ${esc(row.MaDichVu)}<br>
+          Loại: ${esc(row.LoaiDichVu)}<br>
+          Giá: ${Number(row.Gia || 0).toLocaleString('vi-VN')}đ
+        </td>
+        <td>
+          Ngày: ${esc(fmtDate(row.NgayKham))}<br>
+          Phòng: ${esc(row.PhongKham)}<br>
+          Đối tượng: ${esc(row.DoiTuong)} / Loại giá: ${esc(row.LoaiGia)}
+        </td>
+        <td>${result}</td>
+        <td>
+          <div class="actions">
+            <button class="secondary" onclick="check(${row.Id})">Kiểm tra</button>
+            <button onclick="approve(${row.Id})">Duyệt</button>
+            <button class="danger" onclick="reject(${row.Id})">Từ chối</button>
+          </div>
+        </td>
+      </tr>`;
+    }
+
+    async function loadRows() {
+      const status = document.getElementById('status').value;
+      const json = await api(`/api/admin/appointments?status=${encodeURIComponent(status)}`);
+      const rows = document.getElementById('rows');
+      rows.innerHTML = json.appointments.length
+        ? json.appointments.map(rowHtml).join('')
+        : '<tr><td colspan="7">Không có yêu cầu.</td></tr>';
+    }
+
+    async function check(id) {
+      try {
+        const json = await api(`/api/admin/appointments/${id}/check`, { method: 'POST' });
+        setMsg(`Check #${id}: ${JSON.stringify(json.checkResult)}`, true);
+        await loadRows();
+      } catch (err) {
+        setMsg(err.message, false);
+      }
+    }
+
+    async function approve(id) {
+      if (!confirm(`Duyệt và gửi đặt khám #${id} sang Youmed?`)) return;
+      try {
+        const json = await api(`/api/admin/appointments/${id}/approve`, { method: 'POST' });
+        setMsg(`Đã duyệt #${id}. Response: ${JSON.stringify(json.youmedResponse || {})}`, true);
+        await loadRows();
+      } catch (err) {
+        setMsg(err.message, false);
+        await loadRows();
+      }
+    }
+
+    async function reject(id) {
+      const note = prompt('Lý do từ chối:', '');
+      if (note === null) return;
+      try {
+        await api(`/api/admin/appointments/${id}/reject`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ note })
+        });
+        setMsg(`Đã từ chối #${id}.`, true);
+        await loadRows();
+      } catch (err) {
+        setMsg(err.message, false);
+      }
+    }
+
+    document.getElementById('reload').addEventListener('click', loadRows);
+    document.getElementById('status').addEventListener('change', loadRows);
+    loadRows().catch(err => setMsg(err.message, false));
+  </script>
+</body>
+</html>

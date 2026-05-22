@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dat lich kham</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #172033;
+    }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      font-size: 24px;
+      margin: 0 0 18px;
+    }
+    section {
+      background: #fff;
+      border: 1px solid #d8deea;
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin: 12px 0 6px;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #c8d0df;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+    button {
+      cursor: pointer;
+      border: 0;
+      background: #1267d8;
+      color: #fff;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+    button.secondary {
+      background: #eef2f8;
+      color: #172033;
+      border: 1px solid #c8d0df;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .message {
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+      display: none;
+      white-space: pre-wrap;
+    }
+    .ok { background: #e9f8ef; color: #136f34; display: block; }
+    .err { background: #fdecec; color: #9b1c1c; display: block; }
+    .muted { color: #5d687b; font-size: 13px; }
+    @media (max-width: 640px) {
+      main { padding: 14px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Đặt lịch khám</h1>
+
+    <section>
+      <div class="grid">
+        <div>
+          <label for="cccd">CCCD</label>
+          <input id="cccd" inputmode="numeric" maxlength="12" placeholder="Nhập CCCD 12 số">
+        </div>
+        <div>
+          <label for="mayte_lookup">Mã y tế</label>
+          <input id="mayte_lookup" placeholder="Nếu đã có mã y tế">
+        </div>
+      </div>
+      <button type="button" id="lookupBtn" class="secondary">Tra thông tin bệnh nhân</button>
+      <div id="lookupMsg" class="message"></div>
+    </section>
+
+    <form id="bookingForm">
+      <section>
+        <div class="grid">
+          <div>
+            <label for="mayte">Mã y tế</label>
+            <input id="mayte" name="mayte" required>
+          </div>
+          <div>
+            <label for="tenbenhnhan">Họ tên</label>
+            <input id="tenbenhnhan" name="tenbenhnhan">
+          </div>
+          <div>
+            <label for="ngaysinh">Ngày sinh</label>
+            <input id="ngaysinh" name="ngaysinh" placeholder="dd/mm/yyyy">
+          </div>
+          <div>
+            <label for="sodienthoai">Số điện thoại</label>
+            <input id="sodienthoai" name="sodienthoai" inputmode="tel">
+          </div>
+        </div>
+        <label for="diachi">Địa chỉ</label>
+        <textarea id="diachi" name="diachi" rows="2"></textarea>
+      </section>
+
+      <section>
+        <label for="service">Dịch vụ</label>
+        <select id="service" required>
+          <option value="">Đang tải danh sách dịch vụ...</option>
+        </select>
+
+        <div class="grid">
+          <div>
+            <label for="ngaykham">Ngày khám</label>
+            <select id="ngaykham" name="ngaykham" required>
+              <option value="">Chọn dịch vụ trước</option>
+            </select>
+          </div>
+          <div>
+            <label for="phongkham">Phòng khám</label>
+            <input id="phongkham" name="phongkham" readonly>
+          </div>
+        </div>
+        <p id="serviceMeta" class="muted"></p>
+      </section>
+
+      <button type="submit">Gửi yêu cầu chờ duyệt</button>
+      <div id="submitMsg" class="message"></div>
+    </form>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const conversationId = params.get('conversation_id') || params.get('conversationId') || '';
+    let services = [];
+    let selectedService = null;
+
+    function setMsg(id, text, ok) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = `message ${ok ? 'ok' : 'err'}`;
+    }
+
+    function fillPatient(patient) {
+      document.getElementById('mayte').value = patient.mayte || '';
+      document.getElementById('tenbenhnhan').value = patient.tenbenhnhan || '';
+      document.getElementById('ngaysinh').value = patient.ngaysinh || '';
+      document.getElementById('sodienthoai').value = patient.sodienthoai || '';
+      document.getElementById('diachi').value = patient.diachi || '';
+      document.getElementById('cccd').value = patient.cccd || document.getElementById('cccd').value;
+    }
+
+    async function loadServices() {
+      const res = await fetch('/api/appointments/services');
+      const json = await res.json();
+      services = json.data && json.data.dichvus ? json.data.dichvus : [];
+      const select = document.getElementById('service');
+      select.innerHTML = '<option value="">Chọn dịch vụ</option>' + services.map((s, i) => {
+        const name = `${s.loaidichvu} - ${s.tendichvu_his || s.tendichvu_ym} (${Number(s.gia || 0).toLocaleString('vi-VN')}đ)`;
+        return `<option value="${i}">${name}</option>`;
+      }).join('');
+    }
+
+    document.getElementById('lookupBtn').addEventListener('click', async () => {
+      const cccd = document.getElementById('cccd').value.trim();
+      const mayte = document.getElementById('mayte_lookup').value.trim();
+      if (!cccd && !mayte) return setMsg('lookupMsg', 'Vui lòng nhập CCCD hoặc mã y tế.', false);
+      const res = await fetch(`/api/appointments/patient?mayte=${encodeURIComponent(mayte)}&cccd=${encodeURIComponent(cccd)}`);
+      const json = await res.json();
+      if (!res.ok || json.code !== 'success') {
+        return setMsg('lookupMsg', json.message || json.error || 'Không tìm thấy bệnh nhân.', false);
+      }
+      fillPatient(json.data.benhnhan);
+      setMsg('lookupMsg', 'Đã tìm thấy và điền thông tin bệnh nhân.', true);
+    });
+
+    document.getElementById('service').addEventListener('change', e => {
+      selectedService = services[Number(e.target.value)];
+      const dateSelect = document.getElementById('ngaykham');
+      document.getElementById('phongkham').value = '';
+      if (!selectedService) {
+        dateSelect.innerHTML = '<option value="">Chọn dịch vụ trước</option>';
+        document.getElementById('serviceMeta').textContent = '';
+        return;
+      }
+      dateSelect.innerHTML = '<option value="">Chọn ngày khám</option>' + (selectedService.lichkhams || []).map((l, i) => {
+        return `<option value="${i}">${l.ngaykham} - ${l.phongkham}</option>`;
+      }).join('');
+      document.getElementById('serviceMeta').textContent =
+        `Mã dịch vụ: ${selectedService.madichvu}, đối tượng: ${selectedService.doituong}, loại giá: ${selectedService.loaigia}`;
+    });
+
+    document.getElementById('ngaykham').addEventListener('change', e => {
+      const lich = selectedService && selectedService.lichkhams ? selectedService.lichkhams[Number(e.target.value)] : null;
+      document.getElementById('phongkham').value = lich ? lich.phongkham : '';
+    });
+
+    document.getElementById('bookingForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const lich = selectedService && selectedService.lichkhams ? selectedService.lichkhams[Number(document.getElementById('ngaykham').value)] : null;
+      if (!selectedService || !lich) return setMsg('submitMsg', 'Vui lòng chọn dịch vụ và ngày khám.', false);
+
+      const payload = {
+        conversationId,
+        mayte: document.getElementById('mayte').value.trim(),
+        cccd: document.getElementById('cccd').value.trim(),
+        tenbenhnhan: document.getElementById('tenbenhnhan').value.trim(),
+        ngaysinh: document.getElementById('ngaysinh').value.trim(),
+        namsinh: (document.getElementById('ngaysinh').value.match(/\d{4}$/) || [''])[0],
+        sodienthoai: document.getElementById('sodienthoai').value.trim(),
+        diachi: document.getElementById('diachi').value.trim(),
+        gioitinh: '',
+        madichvu: selectedService.madichvu,
+        tendichvu: selectedService.tendichvu_his || selectedService.tendichvu_ym,
+        loaidichvu: selectedService.loaidichvu,
+        ngaykham: lich.ngaykham,
+        phongkham: lich.phongkham,
+        doituong: String(selectedService.doituong),
+        loaigia: String(selectedService.loaigia),
+        gia: selectedService.gia
+      };
+
+      const res = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if (!res.ok) return setMsg('submitMsg', json.error || 'Gửi yêu cầu thất bại.', false);
+      setMsg('submitMsg', `Đã gửi yêu cầu #${json.appointment.Id}. Vui lòng chờ admin duyệt.`, true);
+    });
+
+    loadServices().catch(err => {
+      document.getElementById('service').innerHTML = '<option value="">Không tải được dịch vụ</option>';
+      setMsg('submitMsg', err.message, false);
+    });
+  </script>
+</body>
+</html>
