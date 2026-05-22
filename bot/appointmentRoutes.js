@@ -212,7 +212,9 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
       if (cccd && !CCCD_RE.test(cccd)) return badRequest(res, 'CCCD phai co 12 chu so');
       res.json(await youmed.getPatient({ mayte, cccd }));
     } catch (err) {
-      res.status(502).json({ error: err.message });
+      const status = err.response && err.response.status ? err.response.status : 502;
+      const payload = err.response && err.response.data ? err.response.data : null;
+      res.status(status).json(payload || { code: 'fail', message: 'Khong tra cuu duoc thong tin benh nhan' });
     }
   });
 
