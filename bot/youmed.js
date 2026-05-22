@@ -75,9 +75,14 @@ async function bookAppointment(payload) {
   return request('POST', '/api/youmed/DatKham', payload);
 }
 
+async function createPatient(payload) {
+  return request('POST', '/api/youmed/TaoBenhNhan', payload);
+}
+
 module.exports = {
   getServices,
   getPatient,
   checkAppointment,
   bookAppointment,
+  createPatient,
 };
