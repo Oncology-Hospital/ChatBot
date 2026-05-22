@@ -38,7 +38,12 @@ function normalizeAppointment(body) {
 }
 
 function validateAppointment(data) {
-  if (!data.mayte) return 'Thieu ma y te';
+  if (!data.mayte) {
+    if (!data.tenbenhnhan) return 'Thieu ho ten benh nhan';
+    if (!data.gioitinh) return 'Thieu gioi tinh';
+    if (!data.ngaysinh && !data.namsinh) return 'Thieu ngay sinh hoac nam sinh';
+    if (!data.sodienthoai) return 'Thieu so dien thoai';
+  }
   if (data.cccd && !CCCD_RE.test(data.cccd)) return 'CCCD phai co 12 chu so';
   if (data.sodienthoai && !PHONE_RE.test(data.sodienthoai)) return 'So dien thoai khong hop le';
   if (!data.madichvu || !/^\d+$/.test(data.madichvu)) return 'Thieu ma dich vu';
@@ -47,6 +52,19 @@ function validateAppointment(data) {
   if (!data.loaigia) return 'Thieu loai gia';
   if (data.gia !== null && Number.isNaN(data.gia)) return 'Gia khong hop le';
   return null;
+}
+
+function buildCreatePatientPayload(row) {
+  const payload = {
+    tenbenhnhan: row.TenBenhNhan,
+    gioitinh: row.GioiTinh,
+    sodienthoai: row.SoDienThoai,
+    cccd: row.Cccd || undefined,
+  };
+  if (row.NgaySinh) payload.ngaysinh = row.NgaySinh;
+  if (row.NamSinh) payload.namsinh = row.NamSinh;
+  if (row.DiaChi) payload.sonha = row.DiaChi;
+  return payload;
 }
 
 function buildYoumedPayload(row) {
@@ -122,6 +140,39 @@ async function insertAppointment(data, checkResult) {
   return result.recordset[0];
 }
 
+async function createPendingAppointment(body) {
+  const data = normalizeAppointment(body || {});
+  const validationError = validateAppointment(data);
+  if (validationError) {
+    const error = new Error(validationError);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  let checkResult = null;
+  if (data.mayte) {
+    const checkPayload = {
+      mayte: data.mayte,
+      madichvu: data.madichvu,
+      ngaykham: data.ngaykham,
+      loaigia: String(data.loaigia),
+      doituong: String(data.doituong),
+    };
+    checkResult = await youmed.checkAppointment(checkPayload);
+    if (checkResult.code !== 'success' || checkResult.data !== true) {
+      const message = checkResult.message && checkResult.message !== 'success'
+        ? checkResult.message
+        : 'Lich kham khong con kha dung. Vui long chon dich vu hoac ngay kham khac.';
+      const error = new Error(message);
+      error.statusCode = 409;
+      error.checkResult = checkResult;
+      throw error;
+    }
+  }
+
+  return insertAppointment(data, checkResult);
+}
+
 async function updateCheckResult(id, status, checkResult) {
   const pool = await getPool();
   await pool.request()
@@ -169,6 +220,19 @@ async function markSubmitted(id, youmedResponse, admin) {
     `);
 }
 
+async function updatePatientAfterCreate(id, mayte, youmedResponse) {
+  const pool = await getPool();
+  await pool.request()
+    .input('Id', sql.Int, Number(id))
+    .input('MayTe', sql.NVarChar(50), mayte)
+    .input('YoumedResponse', sql.NVarChar(sql.MAX), JSON.stringify(youmedResponse))
+    .query(`
+      UPDATE dbo.AppointmentRequests
+      SET MayTe = @MayTe, YoumedResponse = @YoumedResponse, UpdatedAt = SYSUTCDATETIME()
+      WHERE Id = @Id
+    `);
+}
+
 async function markFailed(id, response) {
   const pool = await getPool();
   await pool.request()
@@ -189,7 +253,27 @@ function adminNameFromRequest(req) {
 
 function registerAppointmentRoutes(app, { auth, sendMessage }) {
   app.get('/dat-kham', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Documents/DatKhamForm.html'));
+    res.send(`
+      <!doctype html>
+      <html lang="vi">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Đặt lịch khám</title>
+        <style>
+          body{font-family:Arial,sans-serif;background:#f5f7fb;color:#172033;margin:0;display:grid;place-items:center;min-height:100vh}
+          main{max-width:560px;background:#fff;border:1px solid #d8deea;border-radius:8px;padding:24px;line-height:1.5}
+          h1{font-size:22px;margin:0 0 10px}
+        </style>
+      </head>
+      <body>
+        <main>
+          <h1>Đặt lịch khám qua chatbot</h1>
+          <p>Vui lòng mở khung chat và gõ <strong>đặt lịch khám</strong>. Bot sẽ hỏi từng thông tin cần thiết và gửi yêu cầu chờ nhân viên duyệt.</p>
+        </main>
+      </body>
+      </html>
+    `);
   });
 
   app.get('/DatKhamAdmin', auth, (req, res) => {
@@ -220,32 +304,13 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
 
   app.post('/api/appointments', async (req, res) => {
     try {
-      const data = normalizeAppointment(req.body || {});
-      const validationError = validateAppointment(data);
-      if (validationError) return badRequest(res, validationError);
-
-      const checkPayload = {
-        mayte: data.mayte,
-        madichvu: data.madichvu,
-        ngaykham: data.ngaykham,
-        loaigia: String(data.loaigia),
-        doituong: String(data.doituong),
-      };
-      const checkResult = await youmed.checkAppointment(checkPayload);
-      if (checkResult.code !== 'success' || checkResult.data !== true) {
-        const message = checkResult.message && checkResult.message !== 'success'
-          ? checkResult.message
-          : 'Lich kham khong con kha dung. Vui long chon dich vu hoac ngay kham khac.';
-        return res.status(409).json({ error: message, checkResult });
-      }
-
-      const row = await insertAppointment(data, checkResult);
-      if (sendMessage && data.conversationId) {
-        await sendMessage(data.conversationId, `Yeu cau dat lich #${row.Id} da duoc ghi nhan va dang cho admin duyet.`);
+      const row = await createPendingAppointment(req.body || {});
+      if (sendMessage && row.ConversationId) {
+        await sendMessage(row.ConversationId, `Yeu cau dat lich #${row.Id} da duoc ghi nhan va dang cho admin duyet.`);
       }
       res.status(201).json({ appointment: row });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(err.statusCode || 500).json({ error: err.message, checkResult: err.checkResult });
     }
   });
 
@@ -287,27 +352,41 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
       if (!row) return res.status(404).json({ error: 'Not found' });
       if (row.Status === 'submitted') return res.json({ appointment: row, alreadySubmitted: true });
 
-      const payload = buildYoumedPayload(row);
+      let activeRow = row;
+      if (!activeRow.MayTe) {
+        const createPatientResponse = await youmed.createPatient(buildCreatePatientPayload(activeRow));
+        const mayte = createPatientResponse && createPatientResponse.data && createPatientResponse.data.benhnhan
+          ? createPatientResponse.data.benhnhan.mayte
+          : null;
+        if (createPatientResponse.code !== 'success' || !mayte) {
+          await markFailed(activeRow.Id, createPatientResponse);
+          return res.status(409).json({ error: 'Tao benh nhan moi that bai', youmedResponse: createPatientResponse });
+        }
+        await updatePatientAfterCreate(activeRow.Id, mayte, createPatientResponse);
+        activeRow = await getAppointment(activeRow.Id);
+      }
+
+      const payload = buildYoumedPayload(activeRow);
       const checkResult = await youmed.checkAppointment(payload);
       if (checkResult.code !== 'success' || checkResult.data !== true) {
-        await updateCheckResult(row.Id, 'failed', checkResult);
+        await updateCheckResult(activeRow.Id, 'failed', checkResult);
         return res.status(409).json({ error: 'Check dat kham that bai', checkResult });
       }
 
       const youmedResponse = await youmed.bookAppointment(payload);
       if (youmedResponse.code !== 'success') {
-        await markFailed(row.Id, youmedResponse);
+        await markFailed(activeRow.Id, youmedResponse);
         return res.status(409).json({ error: 'Dat kham that bai', youmedResponse });
       }
 
-      await markSubmitted(row.Id, youmedResponse, adminNameFromRequest(req));
-      const updated = await getAppointment(row.Id);
-      if (sendMessage && row.ConversationId) {
+      await markSubmitted(activeRow.Id, youmedResponse, adminNameFromRequest(req));
+      const updated = await getAppointment(activeRow.Id);
+      if (sendMessage && activeRow.ConversationId) {
         const hangcho = youmedResponse.data && youmedResponse.data.hangcho;
         const text = hangcho
           ? `Lich kham cua ban da duoc xac nhan. Ma dat cho: ${hangcho.madatcho}, STT: ${hangcho.stt}, gio: ${hangcho.giokham}, phong: ${hangcho.phongkham}.`
           : 'Lich kham cua ban da duoc xac nhan.';
-        await sendMessage(row.ConversationId, text);
+        await sendMessage(activeRow.ConversationId, text);
       }
       res.json({ appointment: updated, youmedResponse });
     } catch (err) {
@@ -329,5 +408,7 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
     }
   });
 }
+
+registerAppointmentRoutes.createPendingAppointment = createPendingAppointment;
 
 module.exports = registerAppointmentRoutes;

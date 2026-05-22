@@ -6,13 +6,13 @@ const axios = require('axios');
 const fs = require('fs');
 const QAMatcher = require('./matcher');
 const registerAppointmentRoutes = require('./appointmentRoutes');
+const { startAppointmentFlow, handleAppointmentMessage } = require('./appointmentChatFlow');
 
 // ─── Config ───
 const PORT = 4000;
 const CHATWOOT_URL = process.env.CHATWOOT_URL || (process.env.NODE_ENV === 'production' ? 'https://adminchatbot.dienisme.online' : 'http://localhost:3000');
 const CHATWOOT_API_TOKEN = process.env.CHATWOOT_API_TOKEN || 'S4XGRoN3JBvc2aS9nofJKMWX';
 const ACCOUNT_ID = process.env.CHATWOOT_ACCOUNT_ID || 1;
-const BOT_PUBLIC_URL = (process.env.BOT_PUBLIC_URL || 'http://localhost:4000').replace(/\/+$/, '');
 const CONFIDENCE_HIGH = 0.5;   // auto-answer (Cosine Similarity)
 const CONFIDENCE_MED = 0.3;    // suggest similar questions (Cosine Similarity)
 const QA_FILE = path.join(__dirname, 'qa-data.json');
@@ -112,12 +112,6 @@ function isAppointmentIntent(content) {
   ].some(keyword => text.includes(keyword));
 }
 
-function appointmentLink(conversationId) {
-  const url = new URL('/dat-kham', BOT_PUBLIC_URL);
-  url.searchParams.set('conversation_id', conversationId);
-  return url.toString();
-}
-
 async function assignToTeam(conversationId) {
   try {
     // Toggle status to "open" so agents see it
@@ -170,6 +164,16 @@ app.post('/webhook', async (req, res) => {
 
   console.log(`\n📨 Received: "${content}" (conv: ${conversationId})`);
 
+  try {
+    if (await handleAppointmentMessage(conversationId, content, sendMessage)) {
+      return;
+    }
+  } catch (err) {
+    console.error('Appointment flow failed:', err.message);
+    await sendMessage(conversationId, 'Xin lỗi, bot chưa xử lý được bước đặt lịch này. Anh/chị vui lòng thử lại hoặc gõ "gặp nhân viên" để được hỗ trợ.');
+    return;
+  }
+
   // Check for escalation keywords FIRST
   const escalateKeywords = ['gặp nhân viên', 'nhân viên', 'hỗ trợ', 'agent', 'tư vấn', 'gặp bác sĩ'];
   const isEscalate = escalateKeywords.some(k => content.toLowerCase().includes(k));
@@ -182,11 +186,12 @@ app.post('/webhook', async (req, res) => {
   }
 
   if (isAppointmentIntent(content)) {
-    const link = appointmentLink(conversationId);
-    await sendMessage(
-      conversationId,
-      `Bạn có thể gửi yêu cầu đặt lịch khám tại đây:\n${link}\n\nSau khi gửi, admin sẽ kiểm tra và duyệt trước khi lịch được ghi vào hệ thống.`
-    );
+    try {
+      await startAppointmentFlow(conversationId, sendMessage);
+    } catch (err) {
+      console.error('Failed to start appointment flow:', err.message);
+      await sendMessage(conversationId, 'Xin lỗi, hiện chưa bắt đầu được luồng đặt lịch. Anh/chị vui lòng thử lại sau hoặc gõ "gặp nhân viên".');
+    }
     return;
   }
 
