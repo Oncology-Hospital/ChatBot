@@ -233,7 +233,10 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
       };
       const checkResult = await youmed.checkAppointment(checkPayload);
       if (checkResult.code !== 'success' || checkResult.data !== true) {
-        return res.status(409).json({ error: 'Lich kham khong hop le', checkResult });
+        const message = checkResult.message && checkResult.message !== 'success'
+          ? checkResult.message
+          : 'Lich kham khong con kha dung. Vui long chon dich vu hoac ngay kham khac.';
+        return res.status(409).json({ error: message, checkResult });
       }
 
       const row = await insertAppointment(data, checkResult);
