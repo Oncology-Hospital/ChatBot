@@ -48,19 +48,97 @@
       color: #4a5568;
       font-size: 14px;
     }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 22px 0 16px;
+    }
+
+    .primary-action,
+    .secondary-action {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    .primary-action {
+      background: #0b8fdc;
+      color: #fff;
+      box-shadow: 0 10px 22px rgba(11, 143, 220, 0.24);
+    }
+
+    .secondary-action {
+      background: #eef4ff;
+      color: #175cd3;
+    }
+
+    .quick-note {
+      display: none;
+      margin-top: 10px;
+      color: #36506f;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .quick-note.show {
+      display: block;
+    }
   </style>
 </head>
 
 <body>
   <div class="card">
     <h1>🏥 Bệnh viện Ung Bướu TP. Hồ Chí Minh Chat BOT</h1>
-    <p>Chào mừng bạn! Nhấn vào nút chat ở góc phải để được hỗ trợ.</p>
+    <p>Chào mừng bạn! Khung chat sẽ tự mở để bệnh viện hỗ trợ nhanh hơn.</p>
+    <div class="actions">
+      <button id="bookAppointment" class="primary-action" type="button">Đặt lịch khám</button>
+      <button id="openChat" class="secondary-action" type="button">Mở chat</button>
+    </div>
     <div class="hint">
       💡 Thử hỏi: "Giờ mở cửa", "Chi phí khám", "Đặt lịch khám"...
+    </div>
+    <div id="quickNote" class="quick-note">
+      Khung chat đã được mở. Anh/chị vui lòng gửi tin nhắn <strong>đặt lịch khám</strong> để bot bắt đầu hỏi thông tin.
     </div>
   </div>
 
   <script>
+    function openChatWidget() {
+      if (window.$chatwoot && typeof window.$chatwoot.toggle === 'function') {
+        window.$chatwoot.toggle('open');
+        return true;
+      }
+      return false;
+    }
+
+    function showAppointmentHint() {
+      document.getElementById('quickNote').classList.add('show');
+    }
+
+    function openChatWhenReady(retries) {
+      if (openChatWidget()) return;
+      if (retries <= 0) return;
+      window.setTimeout(function () {
+        openChatWhenReady(retries - 1);
+      }, 500);
+    }
+
+    document.getElementById('openChat').addEventListener('click', function () {
+      openChatWhenReady(12);
+    });
+
+    document.getElementById('bookAppointment').addEventListener('click', function () {
+      openChatWhenReady(12);
+      showAppointmentHint();
+    });
+
     (function (d, t) {
       var BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://adminchatbot.dienisme.online';
       var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
@@ -71,7 +149,8 @@
         window.chatwootSDK.run({
           websiteToken: 'Nen3HMqqHgVkhCpXRvrijkW3',
           baseUrl: BASE_URL
-        })
+        });
+        openChatWhenReady(12);
       }
     })(document, "script");
   </script>
