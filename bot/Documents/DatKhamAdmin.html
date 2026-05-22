@@ -37,6 +37,10 @@
       border: 0;
       font-weight: 700;
     }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
     button.secondary { background: #eef2f8; color: #1e293b; border: 1px solid #c8d0df; }
     button.danger { background: #b42318; }
     .table-wrap {
@@ -150,6 +154,7 @@
     }
 
     function rowHtml(row) {
+      const hasMayTe = Boolean(row.MayTe);
       const result = row.MaDatCho
         ? `Mã đặt chỗ: ${esc(row.MaDatCho)}<br>STT: ${esc(row.STT)}<br>Giờ: ${esc(row.GioKham)}`
         : `<span class="small">${esc(row.CheckResult || '')}</span>`;
@@ -159,7 +164,7 @@
         <td><span class="pill">${esc(row.Status)}</span><br><span class="small">${esc(row.CreatedAt)}</span></td>
         <td>
           <strong>${esc(row.TenBenhNhan)}</strong><br>
-          Mã y tế: ${esc(row.MayTe)}<br>
+          Mã y tế: ${hasMayTe ? esc(row.MayTe) : '<span class="small">Bệnh nhân mới, chưa có mã y tế</span>'}<br>
           CCCD: ${esc(row.Cccd)}<br>
           SĐT: ${esc(row.SoDienThoai)}
         </td>
@@ -177,7 +182,7 @@
         <td>${result}</td>
         <td>
           <div class="actions">
-            <button class="secondary" onclick="check(${row.Id})">Kiểm tra</button>
+            <button class="secondary" onclick="check(${row.Id})" ${hasMayTe ? '' : 'disabled title="Bệnh nhân mới cần bấm Duyệt để tạo hồ sơ trước"'}>Kiểm tra</button>
             <button onclick="approve(${row.Id})">Duyệt</button>
             <button class="danger" onclick="reject(${row.Id})">Từ chối</button>
           </div>

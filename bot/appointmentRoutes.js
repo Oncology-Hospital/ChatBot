@@ -82,6 +82,13 @@ function buildYoumedPayload(row) {
   };
 }
 
+function buildMissingMayTeCheckResult() {
+  return {
+    code: 'pending_patient',
+    message: 'Benh nhan moi chua co ma y te. Vui long bam Duyet de tao ho so, sau do he thong se tu kiem tra va dat kham.',
+  };
+}
+
 async function getAppointment(id) {
   const pool = await getPool();
   const result = await pool.request()
@@ -343,6 +350,11 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
     try {
       const row = await getAppointment(req.params.id);
       if (!row) return res.status(404).json({ error: 'Not found' });
+      if (!row.MayTe) {
+        const checkResult = buildMissingMayTeCheckResult();
+        await updateCheckResult(row.Id, 'pending', checkResult);
+        return res.json({ checkResult });
+      }
       const checkResult = await youmed.checkAppointment(buildYoumedPayload(row));
       await updateCheckResult(row.Id, checkResult.code === 'success' && checkResult.data === true ? 'pending' : 'failed', checkResult);
       res.json({ checkResult });
