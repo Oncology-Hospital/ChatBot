@@ -13,7 +13,6 @@ const PORT = 4000;
 const CHATWOOT_URL = process.env.CHATWOOT_URL || (process.env.NODE_ENV === 'production' ? 'https://adminchatbot.dienisme.online' : 'http://localhost:3000');
 const CHATWOOT_API_TOKEN = process.env.CHATWOOT_API_TOKEN || 'S4XGRoN3JBvc2aS9nofJKMWX';
 const ACCOUNT_ID = process.env.CHATWOOT_ACCOUNT_ID || 1;
-const CHATWOOT_WEBSITE_TOKEN = process.env.CHATWOOT_WEBSITE_TOKEN || 'Nen3HMqqHgVkhCpXRvrijkW3';
 const CONFIDENCE_HIGH = 0.5;   // auto-answer (Cosine Similarity)
 const CONFIDENCE_MED = 0.3;    // suggest similar questions (Cosine Similarity)
 const QA_FILE = path.join(__dirname, 'qa-data.json');
@@ -96,7 +95,6 @@ registerAppointmentRoutes(app, { auth, sendMessage });
 function normalizeForIntent(value) {
   return String(value || '')
     .toLowerCase()
-    .replace(/[Đđ]/g, 'd')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/đ/g, 'd');
@@ -146,41 +144,6 @@ async function assignToTeam(conversationId) {
     console.error('Failed to assign conversation:', err.message);
   }
 }
-
-app.post('/api/widget/send-appointment-intent', async (req, res) => {
-  const authToken = String(req.body.authToken || '').trim();
-  const content = String(req.body.content || 'Đặt lịch khám').trim() || 'Đặt lịch khám';
-
-  if (!authToken) {
-    return res.status(400).json({ error: 'Missing Chatwoot conversation token' });
-  }
-
-  try {
-    const response = await axios.post(
-      `${CHATWOOT_URL}/api/v1/widget/messages`,
-      {
-        message: {
-          content,
-          timestamp: new Date().toString(),
-          referer_url: req.headers.referer || '',
-        },
-      },
-      {
-        params: { website_token: CHATWOOT_WEBSITE_TOKEN },
-        headers: {
-          'X-Auth-Token': authToken,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    res.json({ success: true, message: response.data });
-  } catch (err) {
-    const status = err.response && err.response.status ? err.response.status : 502;
-    const payload = err.response && err.response.data ? err.response.data : { error: err.message };
-    res.status(status).json(payload);
-  }
-});
 
 // ─── Webhook from Chatwoot ───
 app.post('/webhook', async (req, res) => {
