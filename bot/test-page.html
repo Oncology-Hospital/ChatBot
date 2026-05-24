@@ -57,8 +57,7 @@
       margin: 22px 0 16px;
     }
 
-    .primary-action,
-    .secondary-action {
+    .primary-action {
       border: 0;
       border-radius: 999px;
       padding: 12px 18px;
@@ -74,11 +73,6 @@
       box-shadow: 0 10px 22px rgba(11, 143, 220, 0.24);
     }
 
-    .secondary-action {
-      background: #eef4ff;
-      color: #175cd3;
-    }
-
     .quick-note {
       display: none;
       margin-top: 10px;
@@ -90,6 +84,10 @@
     .quick-note.show {
       display: block;
     }
+
+    .quick-note.error {
+      color: #9b1c1c;
+    }
   </style>
 </head>
 
@@ -99,13 +97,12 @@
     <p>Chào mừng bạn! Khung chat sẽ tự mở để bệnh viện hỗ trợ nhanh hơn.</p>
     <div class="actions">
       <button id="bookAppointment" class="primary-action" type="button">Đặt lịch khám</button>
-      <button id="openChat" class="secondary-action" type="button">Mở chat</button>
     </div>
     <div class="hint">
       💡 Thử hỏi: "Giờ mở cửa", "Chi phí khám", "Đặt lịch khám"...
     </div>
     <div id="quickNote" class="quick-note">
-      Khung chat đã được mở. Anh/chị vui lòng gửi tin nhắn <strong>đặt lịch khám</strong> để bot bắt đầu hỏi thông tin.
+      Đang gửi tin nhắn <strong>Đặt lịch khám</strong> vào khung chat...
     </div>
   </div>
 
@@ -119,7 +116,24 @@
     }
 
     function showAppointmentHint() {
-      document.getElementById('quickNote').classList.add('show');
+      var note = document.getElementById('quickNote');
+      note.classList.remove('error');
+      note.innerHTML = 'Đang gửi tin nhắn <strong>Đặt lịch khám</strong> vào khung chat...';
+      note.classList.add('show');
+    }
+
+    function showAppointmentError(message) {
+      var note = document.getElementById('quickNote');
+      note.classList.add('error');
+      note.textContent = message;
+      note.classList.add('show');
+    }
+
+    function showAppointmentSent() {
+      var note = document.getElementById('quickNote');
+      note.classList.remove('error');
+      note.textContent = 'Đã gửi tin nhắn Đặt lịch khám. Bot sẽ bắt đầu hỏi thông tin trong khung chat.';
+      note.classList.add('show');
     }
 
     function openChatWhenReady(retries) {
@@ -130,13 +144,60 @@
       }, 500);
     }
 
-    document.getElementById('openChat').addEventListener('click', function () {
+    function readCookie(name) {
+      return document.cookie
+        .split('; ')
+        .map(function (item) { return item.split('='); })
+        .find(function (parts) { return parts[0] === name; });
+    }
+
+    function getChatwootAuthToken() {
+      var cookie = readCookie('cw_conversation');
+      return cookie ? decodeURIComponent(cookie.slice(1).join('=')) : '';
+    }
+
+    function waitForChatwootAuthToken(retries) {
+      return new Promise(function (resolve, reject) {
+        var token = getChatwootAuthToken();
+        if (token) return resolve(token);
+        if (retries <= 0) return reject(new Error('Chưa lấy được phiên Chatwoot. Anh/chị vui lòng thử lại sau vài giây.'));
+        window.setTimeout(function () {
+          waitForChatwootAuthToken(retries - 1).then(resolve).catch(reject);
+        }, 500);
+      });
+    }
+
+    async function sendAppointmentIntent() {
+      var button = document.getElementById('bookAppointment');
+      button.disabled = true;
+      showAppointmentHint();
       openChatWhenReady(12);
-    });
+
+      try {
+        var authToken = await waitForChatwootAuthToken(16);
+        var response = await fetch('/api/widget/send-appointment-intent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            authToken: authToken,
+            content: 'Đặt lịch khám'
+          })
+        });
+        var json = await response.json().catch(function () { return {}; });
+        if (!response.ok) throw new Error(json.error || 'Không gửi được tin nhắn đặt lịch.');
+        showAppointmentSent();
+        openChatWhenReady(4);
+      } catch (err) {
+        showAppointmentError(err.message || 'Không gửi được tin nhắn đặt lịch. Anh/chị vui lòng gõ Đặt lịch khám trong khung chat.');
+      } finally {
+        window.setTimeout(function () {
+          button.disabled = false;
+        }, 1200);
+      }
+    }
 
     document.getElementById('bookAppointment').addEventListener('click', function () {
-      openChatWhenReady(12);
-      showAppointmentHint();
+      sendAppointmentIntent();
     });
 
     (function (d, t) {
