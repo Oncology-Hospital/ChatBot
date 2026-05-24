@@ -172,6 +172,10 @@
   </div>
 
   <script>
+    window.chatwootSettings = {
+      showUnreadMessagesDialog: false
+    };
+
     function openChatWidget() {
       if (window.$chatwoot && typeof window.$chatwoot.toggle === 'function') {
         window.$chatwoot.toggle('open');
@@ -195,6 +199,10 @@
     document.getElementById('bookAppointment').addEventListener('click', function () {
       openChatWhenReady(12);
       showAppointmentHint();
+    });
+
+    window.addEventListener('chatwoot:ready', function () {
+      openChatWhenReady(12);
     });
 
     (function (d, t) {
