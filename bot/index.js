@@ -97,19 +97,27 @@ function normalizeForIntent(value) {
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd');
+    .replace(/[\u0111\u0110]/g, 'd');
 }
 
 function isAppointmentIntent(content) {
   const text = normalizeForIntent(content);
-  return [
+  const directPhrases = [
     'dat lich',
     'dang ky kham',
     'dat kham',
-    'lich kham',
     'hen kham',
-    'kham benh',
-  ].some(keyword => text.includes(keyword));
+    'lay so kham',
+    'muon dat hen',
+    'muon dang ky',
+  ];
+
+  if (directPhrases.some(keyword => text.includes(keyword))) return true;
+
+  const hasBookingVerb = ['dat', 'dang ky', 'hen', 'lay so'].some(keyword => text.includes(keyword));
+  const hasExamTarget = ['kham', 'lich kham', 'kham benh'].some(keyword => text.includes(keyword));
+
+  return hasBookingVerb && hasExamTarget;
 }
 
 async function assignToTeam(conversationId) {
@@ -196,14 +204,18 @@ app.post('/webhook', async (req, res) => {
   }
 
   // ─── Match against Q&A ───
-  const result = await matcher.findBestMatch(content);
+  const result = await matcher.findAnswerBundle(content, {
+    highThreshold: CONFIDENCE_HIGH,
+    segmentThreshold: 0.48
+  });
 
   if (result.confidence >= CONFIDENCE_HIGH && result.match) {
     // High confidence → auto-answer with GPT formulation
-    console.log(`✅ Match: "${result.match.question}" (confidence: ${result.confidence.toFixed(2)})`);
+    const matchedQuestions = result.matches.map(item => item.question).join(' | ');
+    console.log(`✅ Match: "${matchedQuestions}" (confidence: ${result.confidence.toFixed(2)})`);
     
     // Yêu cầu ChatGPT format lại dựa trên data gốc
-    const smartOutput = await matcher.smartReply(content, result.match.answer);
+    const smartOutput = await matcher.smartReply(content, result.matches);
     
     const reply = `${smartOutput}\n\n_Câu trả lời có hữu ích không? Nếu không, gõ "gặp nhân viên" để được hỗ trợ._`;
     await sendMessage(conversationId, reply);
