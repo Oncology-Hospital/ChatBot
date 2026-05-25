@@ -24,6 +24,56 @@ function cosineSimilarity(vecA, vecB) {
   return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
+function normalizeText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u0111\u0110]/g, 'd')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+const INTENT_RULES = [
+  {
+    key: 'address',
+    label: 'dia chi benh vien',
+    keywords: ['dia chi', 'd c', 'o dau', 'cho nao', 'co so nao', 'duong nao', 'cong may'],
+    qaHints: ['dia chi benh vien']
+  },
+  {
+    key: 'phone',
+    label: 'so dien thoai lien he',
+    keywords: ['sdt', 'so dt', 'so dien thoai', 'dien thoai', 'hotline', 'tong dai', 'lien he'],
+    qaHints: ['so dien thoai lien he']
+  },
+  {
+    key: 'website',
+    label: 'website benh vien',
+    keywords: ['website', 'trang web', 'web benh vien', 'link web'],
+    qaHints: ['website benh vien']
+  },
+  {
+    key: 'schedule',
+    label: 'lich kham benh',
+    keywords: ['lich kham', 'gio kham', 'gio lam viec', 'lich lam viec', 'thoi gian kham', 'may gio kham', 'cuoi tuan'],
+    qaHints: ['lich kham benh']
+  },
+  {
+    key: 'payment',
+    label: 'hinh thuc thanh toan',
+    keywords: ['thanh toan', 'tra tien', 'chuyen khoan', 'quet the', 'tien mat'],
+    qaHints: ['hinh thuc thanh toan']
+  },
+  {
+    key: 'insurance',
+    label: 'bao hiem y te',
+    keywords: ['bhyt', 'bao hiem', 'bao hiem y te', 'the bao hiem', 'giay chuyen tuyen'],
+    qaHints: ['bao hiem y te', 'hinh thuc kham']
+  }
+];
+
 class QAMatcher {
   constructor() {
     this.qaData = [];
@@ -93,61 +143,183 @@ class QAMatcher {
     }
 
     try {
-      // Mã hóa câu hỏi của người dùng
-      const queryResult = await embeddingModel.embedContent(userQuestion);
-      const queryEmbedding = queryResult.embedding.values;
-
-      // Tính điểm tương đồng với toàn bộ database
-      const scores = {};
-      for (const doc of this.docMap) {
-        const similarity = cosineSimilarity(queryEmbedding, doc.embedding);
-        if (!scores[doc.qaId] || similarity > scores[doc.qaId]) {
-          scores[doc.qaId] = similarity;
-        }
-      }
-
-      // Tìm câu có điểm cao nhất
-      let bestId = null;
-      let bestScore = 0;
-      for (const [qaId, score] of Object.entries(scores)) {
-        if (score > bestScore) {
-          bestScore = score;
-          bestId = parseInt(qaId);
-        }
-      }
-
-      if (!bestId) return { match: null, confidence: 0, suggestions: [] };
-
-      const bestQA = this.qaData.find(q => q.id === bestId);
-
-      // Lấy top 3 câu gợi ý
-      const sortedScores = Object.entries(scores)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 4)
-        .map(([id]) => this.qaData.find(q => q.id === parseInt(id)))
-        .filter(Boolean);
-
-      return {
-        match: bestQA,
-        confidence: bestScore, // Điểm Cosine ~ 0.5 đến 1.0 tùy mức độ
-        suggestions: sortedScores
-      };
+      return await this.scoreQuestion(userQuestion);
     } catch (err) {
       console.error("[Gemini] Match error:", err.message);
       return { match: null, confidence: 0, suggestions: [] };
     }
   }
 
+  async scoreQuestion(userQuestion) {
+    const queryResult = await embeddingModel.embedContent(userQuestion);
+    const queryEmbedding = queryResult.embedding.values;
+
+    const scores = {};
+    for (const doc of this.docMap) {
+      const similarity = cosineSimilarity(queryEmbedding, doc.embedding);
+      if (!scores[doc.qaId] || similarity > scores[doc.qaId]) {
+        scores[doc.qaId] = similarity;
+      }
+    }
+
+    let bestId = null;
+    let bestScore = 0;
+    for (const [qaId, score] of Object.entries(scores)) {
+      if (score > bestScore) {
+        bestScore = score;
+        bestId = parseInt(qaId);
+      }
+    }
+
+    if (!bestId) return { match: null, confidence: 0, suggestions: [] };
+
+    const bestQA = this.qaData.find(q => q.id === bestId);
+    const sortedScores = Object.entries(scores)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([id, score]) => {
+        const qa = this.qaData.find(q => q.id === parseInt(id));
+        return qa ? { ...qa, confidence: score } : null;
+      })
+      .filter(Boolean);
+
+    return {
+      match: bestQA,
+      confidence: bestScore,
+      suggestions: sortedScores
+    };
+  }
+
+  findQaByHints(hints) {
+    for (const hint of hints) {
+      const normalizedHint = normalizeText(hint);
+      const match = this.qaData.find(qa => normalizeText(qa.question).includes(normalizedHint));
+      if (match) return match;
+    }
+    return null;
+  }
+
+  findIntentMatches(userQuestion) {
+    const normalized = normalizeText(userQuestion);
+    const matches = [];
+
+    for (const rule of INTENT_RULES) {
+      if (!rule.keywords.some(keyword => normalized.includes(keyword))) continue;
+
+      const qa = this.findQaByHints(rule.qaHints);
+      if (qa) {
+        matches.push({
+          ...qa,
+          confidence: 1,
+          source: 'intent',
+          intent: rule.key
+        });
+      }
+    }
+
+    return matches;
+  }
+
+  splitIntoSubQuestions(userQuestion) {
+    const normalizedSeparators = String(userQuestion || '')
+      .split(/\s*(?:&|\+|\/|,|;|\?)\s*|\s+(?:và|va|với|voi|cùng|cung|kèm|kem|hoặc|hoac)\s+/i)
+      .map(part => part.trim())
+      .filter(part => normalizeText(part).length >= 6);
+
+    return [...new Set([userQuestion, ...normalizedSeparators])];
+  }
+
+  addMatch(uniqueMatches, candidate) {
+    if (!candidate || !candidate.id || uniqueMatches.has(candidate.id)) return;
+    uniqueMatches.set(candidate.id, candidate);
+  }
+
+  async findAnswerBundle(userQuestion, options = {}) {
+    const highThreshold = options.highThreshold ?? 0.5;
+    const segmentThreshold = options.segmentThreshold ?? 0.48;
+
+    if (!this.isReady) {
+      return { match: null, matches: [], confidence: 0, suggestions: [] };
+    }
+
+    const uniqueMatches = new Map();
+    const intentMatches = this.findIntentMatches(userQuestion);
+    intentMatches.forEach(match => this.addMatch(uniqueMatches, match));
+
+    if (intentMatches.length >= 2) {
+      const matches = [...uniqueMatches.values()].slice(0, 4);
+      return {
+        match: matches[0] || null,
+        matches,
+        confidence: matches[0]?.confidence || 0,
+        suggestions: []
+      };
+    }
+
+    const originalResult = await this.findBestMatch(userQuestion);
+    if (originalResult.match && originalResult.confidence >= highThreshold) {
+      this.addMatch(uniqueMatches, {
+        ...originalResult.match,
+        confidence: originalResult.confidence,
+        source: 'embedding'
+      });
+    }
+
+    const subQuestions = this.splitIntoSubQuestions(userQuestion).slice(1, 6);
+    for (const subQuestion of subQuestions) {
+      const result = await this.findBestMatch(subQuestion);
+      if (result.match && result.confidence >= segmentThreshold) {
+        this.addMatch(uniqueMatches, {
+          ...result.match,
+          confidence: result.confidence,
+          source: 'segment'
+        });
+      }
+    }
+
+    const matches = [...uniqueMatches.values()]
+      .sort((a, b) => (b.confidence || 0) - (a.confidence || 0))
+      .slice(0, 4);
+
+    return {
+      match: matches[0] || null,
+      matches,
+      confidence: matches[0]?.confidence || originalResult.confidence || 0,
+      suggestions: originalResult.suggestions || []
+    };
+  }
+
+  formatSourceAnswers(matchedAnswers) {
+    if (Array.isArray(matchedAnswers)) {
+      return matchedAnswers
+        .map((item, index) => `${index + 1}. ${item.question}\n${item.answer}`)
+        .join('\n\n');
+    }
+
+    return matchedAnswers;
+  }
+
+  fallbackReply(matchedAnswers) {
+    if (Array.isArray(matchedAnswers)) {
+      return matchedAnswers
+        .map(item => `${item.question}\n${item.answer}`)
+        .join('\n\n');
+    }
+
+    return matchedAnswers;
+  }
+
   // Chuyển qua Gemini format lại câu trả lời mềm mỏng
-  async smartReply(userQuestion, matchedAnswer) {
+  async smartReply(userQuestion, matchedAnswers) {
     try {
-      const prompt = `Bạn là lễ tân trực tổng đài Bệnh Viện Ung Bướu TP.HCM. Hãy trả lời câu hỏi của bệnh nhân dựa TRÊN THÔNG TIN GỐC SAU ĐÂY. KHÔNG ĐƯỢC BỊA ĐẶT. GIỮ NGUYÊN THÔNG TIN GIÁ TIỀN, ĐỊA CHỈ, SĐT. Hãy trả lời ngắn gọn, lịch sự, xưng hô là "bệnh viện" và "anh/chị".\n\nCâu hỏi của khách: "${userQuestion}"\n\nThông tin gốc: "${matchedAnswer}"`;
+      const sourceAnswers = this.formatSourceAnswers(matchedAnswers);
+      const prompt = `Bạn là lễ tân trực tổng đài Bệnh Viện Ung Bướu TP.HCM. Hãy trả lời câu hỏi của bệnh nhân dựa TRÊN THÔNG TIN GỐC SAU ĐÂY. KHÔNG ĐƯỢC BỊA ĐẶT. GIỮ NGUYÊN THÔNG TIN GIÁ TIỀN, ĐỊA CHỈ, SĐT. Nếu câu hỏi có nhiều ý, phải trả lời đầy đủ từng ý đã có trong thông tin gốc, không chỉ chọn một ý đúng nhất. Hãy trả lời ngắn gọn, lịch sự, xưng hô là "bệnh viện" và "anh/chị".\n\nCâu hỏi của khách: "${userQuestion}"\n\nThông tin gốc:\n${sourceAnswers}`;
       
       const result = await chatModel.generateContent(prompt);
       return result.response.text();
     } catch (err) {
       console.error("[Gemini] Chat lỗi:", err.message);
-      return matchedAnswer; // Sai thì trả về đáp án cứng
+      return this.fallbackReply(matchedAnswers); // Sai thì trả về đáp án cứng
     }
   }
 }
