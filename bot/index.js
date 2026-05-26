@@ -114,6 +114,15 @@ function formatChatwootError(data) {
   return messages.length ? [...new Set(messages)].join(', ') : '';
 }
 
+function deriveAccountName(name, email) {
+  const domain = String(email || '').split('@')[1] || '';
+  const domainName = domain.split('.')[0] || '';
+  return String(name || domainName || 'Staff')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .slice(0, 80);
+}
+
 // ─── Load Q&A Data ───
 let qaData = JSON.parse(fs.readFileSync(QA_FILE, 'utf-8'));
 const matcher = new QAMatcher();
@@ -155,13 +164,13 @@ async function handleStaffSignup(req, res) {
 
   try {
     const chatwootRes = await axios.post(
-      `${CHATWOOT_URL}/auth`,
+      `${CHATWOOT_URL}/api/v1/accounts.json`,
       {
-        name,
+        account_name: deriveAccountName(name, email),
+        user_full_name: name,
         email,
         password,
-        password_confirmation: passwordConfirmation,
-        confirm_success_url: `${cleanBaseUrl(process.env.FRONTEND_URL || CHATWOOT_URL)}/app/login`,
+        locale: 'vi',
       },
       {
         timeout: 10000,
