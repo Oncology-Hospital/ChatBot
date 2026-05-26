@@ -8,6 +8,9 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
+    location = /app/sign-up/ {
+        return 301 /app/sign-up;
+    }
     location = /sign-up {
         return 301 /app/sign-up;
     }
