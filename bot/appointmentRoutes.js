@@ -289,6 +289,10 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
   });
 
   app.get('/DatKhamAdmin', (req, res) => {
+    res.redirect(301, '/QuanLyDatKham');
+  });
+
+  app.get('/QuanLyDatKham', (req, res) => {
     res.sendFile(path.join(__dirname, 'Documents/DatKhamAdmin.html'));
   });
 
