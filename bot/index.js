@@ -36,6 +36,7 @@ const CHATWOOT_AUTH_URLS = uniqueUrls([
   DEFAULT_CHATWOOT_URL,
 ]);
 const CHATWOOT_API_TOKEN = process.env.CHATWOOT_API_TOKEN || 'S4XGRoN3JBvc2aS9nofJKMWX';
+const CHATWOOT_PLATFORM_API_TOKEN = process.env.CHATWOOT_PLATFORM_API_TOKEN || process.env.CHATWOOT_PLATFORM_TOKEN || '';
 const ACCOUNT_ID = process.env.CHATWOOT_ACCOUNT_ID || 1;
 const CHATWOOT_DASHBOARD_URL = `${cleanBaseUrl(process.env.FRONTEND_URL || CHATWOOT_URL)}/app/accounts/${ACCOUNT_ID}/dashboard`;
 const CONFIDENCE_HIGH = 0.5;   // auto-answer (Cosine Similarity)
@@ -114,15 +115,6 @@ function formatChatwootError(data) {
   return messages.length ? [...new Set(messages)].join(', ') : '';
 }
 
-function deriveAccountName(name, email) {
-  const domain = String(email || '').split('@')[1] || '';
-  const domainName = domain.split('.')[0] || '';
-  return String(name || domainName || 'Staff')
-    .trim()
-    .replace(/\s+/g, ' ')
-    .slice(0, 80);
-}
-
 // ─── Load Q&A Data ───
 let qaData = JSON.parse(fs.readFileSync(QA_FILE, 'utf-8'));
 const matcher = new QAMatcher();
@@ -165,22 +157,31 @@ async function handleStaffSignup(req, res) {
   if (password !== passwordConfirmation) {
     return res.status(400).json({ error: 'Mat khau nhap lai chua khop.' });
   }
+  if (!CHATWOOT_PLATFORM_API_TOKEN) {
+    return res.status(500).json({
+      error: 'VPS chua cau hinh CHATWOOT_PLATFORM_API_TOKEN de tao user Chatwoot. Tao Platform App token roi them vao .env cua bot.',
+    });
+  }
 
   try {
     const chatwootRes = await axios.post(
-      `${CHATWOOT_URL}/api/v1/accounts.json`,
+      `${CHATWOOT_URL}/platform/api/v1/users`,
       {
-        account_name: deriveAccountName(name, email),
-        user_full_name: name,
+        name,
+        display_name: name,
         email,
         password,
-        locale: 'vi',
+        custom_attributes: {
+          signup_source: 'staff_signup',
+          pending_account_assignment: true,
+        },
       },
       {
         timeout: 10000,
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          api_access_token: CHATWOOT_PLATFORM_API_TOKEN,
         },
         validateStatus: status => status < 500,
       }
@@ -191,6 +192,9 @@ async function handleStaffSignup(req, res) {
     }
 
     const message = formatChatwootError(chatwootRes.data);
+    if (chatwootRes.status === 401) {
+      return res.status(502).json({ error: 'CHATWOOT_PLATFORM_API_TOKEN khong hop le hoac khong phai token cua Platform App.' });
+    }
     return res.status(chatwootRes.status).json({ error: message || 'Chatwoot tu choi tao tai khoan.' });
   } catch (err) {
     console.error('Staff signup failed:', err.message);
