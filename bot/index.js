@@ -37,9 +37,53 @@ const CHATWOOT_AUTH_URLS = uniqueUrls([
 ]);
 const CHATWOOT_API_TOKEN = process.env.CHATWOOT_API_TOKEN || 'S4XGRoN3JBvc2aS9nofJKMWX';
 const ACCOUNT_ID = process.env.CHATWOOT_ACCOUNT_ID || 1;
+const CHATWOOT_DASHBOARD_URL = `${cleanBaseUrl(process.env.FRONTEND_URL || CHATWOOT_URL)}/app/accounts/${ACCOUNT_ID}/dashboard`;
 const CONFIDENCE_HIGH = 0.5;   // auto-answer (Cosine Similarity)
 const CONFIDENCE_MED = 0.3;    // suggest similar questions (Cosine Similarity)
 const QA_FILE = path.join(__dirname, 'qa-data.json');
+
+function decodeCookieValue(value) {
+  try {
+    return decodeURIComponent(value);
+  } catch (_) {
+    return value;
+  }
+}
+
+function parseCookies(cookieHeader) {
+  return String(cookieHeader || '')
+    .split(';')
+    .map(part => part.trim())
+    .filter(Boolean)
+    .reduce((cookies, part) => {
+      const separatorIndex = part.indexOf('=');
+      if (separatorIndex === -1) return cookies;
+
+      const name = part.slice(0, separatorIndex).trim();
+      const value = part.slice(separatorIndex + 1).trim().replace(/^"|"$/g, '');
+      cookies[name] = decodeCookieValue(value);
+      return cookies;
+    }, {});
+}
+
+function hasActiveChatwootSession(cookieHeader) {
+  const cookies = parseCookies(cookieHeader);
+  const rawSession = cookies.cw_d_session_info || cookies.auth_data;
+  if (!rawSession) return false;
+
+  try {
+    const session = JSON.parse(rawSession);
+    const token = session['access-token'] || session.accessToken || session.token;
+    const client = session.client;
+    const uid = session.uid || session.email;
+    if (!token || !client || !uid) return false;
+
+    const expiry = Number(session.expiry);
+    return !Number.isFinite(expiry) || expiry <= 0 || expiry * 1000 > Date.now();
+  } catch (_) {
+    return false;
+  }
+}
 
 // ─── Load Q&A Data ───
 let qaData = JSON.parse(fs.readFileSync(QA_FILE, 'utf-8'));
@@ -55,6 +99,10 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'test-page.html')))
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('/app/sign-up', (req, res) => {
+  if (hasActiveChatwootSession(req.headers.cookie)) {
+    return res.redirect(302, CHATWOOT_DASHBOARD_URL);
+  }
+
   res.set('X-Staff-Signup-Page', 'bot');
   res.sendFile(path.join(__dirname, 'Documents/StaffSignup.html'));
 });

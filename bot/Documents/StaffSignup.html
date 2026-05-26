@@ -236,9 +236,48 @@
     const button = document.getElementById('submitButton');
     const message = document.getElementById('message');
     const loginLink = document.getElementById('loginLink');
+    const dashboardUrl = location.hostname === 'chatbot.dienisme.online'
+      ? 'https://adminchatbot.dienisme.online/app/accounts/1/dashboard'
+      : '/app/accounts/1/dashboard';
 
     if (location.hostname === 'chatbot.dienisme.online') {
       loginLink.href = 'https://adminchatbot.dienisme.online/app/login';
+    }
+
+    function getCookie(name) {
+      return document.cookie
+        .split(';')
+        .map(part => part.trim())
+        .find(part => part.startsWith(`${name}=`))
+        ?.slice(name.length + 1) || '';
+    }
+
+    function readJsonCookie(name) {
+      const value = getCookie(name);
+      if (!value) return null;
+
+      try {
+        return JSON.parse(decodeURIComponent(value));
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function hasActiveChatwootSession() {
+      const session = readJsonCookie('cw_d_session_info') || readJsonCookie('auth_data');
+      if (!session) return false;
+
+      const token = session['access-token'] || session.accessToken || session.token;
+      const client = session.client;
+      const uid = session.uid || session.email;
+      if (!token || !client || !uid) return false;
+
+      const expiry = Number(session.expiry);
+      return !Number.isFinite(expiry) || expiry <= 0 || expiry * 1000 > Date.now();
+    }
+
+    if (hasActiveChatwootSession()) {
+      window.location.replace(dashboardUrl);
     }
 
     function setMessage(text, ok) {
