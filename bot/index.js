@@ -85,6 +85,35 @@ function hasActiveChatwootSession(cookieHeader) {
   }
 }
 
+function collectErrorMessages(value, prefix = '') {
+  if (value === null || value === undefined) return [];
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return [prefix ? `${prefix} ${value}` : String(value)];
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap(item => collectErrorMessages(item, prefix));
+  }
+  if (typeof value === 'object') {
+    return Object.entries(value).flatMap(([key, item]) => {
+      const normalizedKey = key.replace(/_/g, ' ');
+      const hiddenKeys = ['base', 'error', 'errors', 'full messages', 'message'];
+      const nextPrefix = hiddenKeys.includes(normalizedKey)
+        ? prefix
+        : [prefix, normalizedKey].filter(Boolean).join(' ');
+      return collectErrorMessages(item, nextPrefix);
+    });
+  }
+  return [];
+}
+
+function formatChatwootError(data) {
+  const source = data && (data.errors || data.error || data.message || data);
+  const messages = collectErrorMessages(source)
+    .map(message => message.trim())
+    .filter(Boolean);
+  return messages.length ? [...new Set(messages)].join(', ') : '';
+}
+
 // ─── Load Q&A Data ───
 let qaData = JSON.parse(fs.readFileSync(QA_FILE, 'utf-8'));
 const matcher = new QAMatcher();
@@ -148,8 +177,7 @@ async function handleStaffSignup(req, res) {
       return res.status(201).json({ success: true });
     }
 
-    const errors = chatwootRes.data && (chatwootRes.data.errors || chatwootRes.data.error || chatwootRes.data.message);
-    const message = Array.isArray(errors) ? errors.join(', ') : errors;
+    const message = formatChatwootError(chatwootRes.data);
     return res.status(chatwootRes.status).json({ error: message || 'Chatwoot tu choi tao tai khoan.' });
   } catch (err) {
     console.error('Staff signup failed:', err.message);
