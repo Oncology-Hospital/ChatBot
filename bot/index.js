@@ -111,7 +111,7 @@ app.get(['/app/sign-up/', '/sign-up', '/dang-ky-tai-khoan', '/DangKyTaiKhoan', '
   res.redirect(301, '/app/sign-up');
 });
 
-app.post('/api/staff-signup', async (req, res) => {
+async function handleStaffSignup(req, res) {
   const name = String(req.body.name || '').trim();
   const email = String(req.body.email || '').trim().toLowerCase();
   const password = String(req.body.password || '');
@@ -155,7 +155,10 @@ app.post('/api/staff-signup', async (req, res) => {
     console.error('Staff signup failed:', err.message);
     return res.status(502).json({ error: 'Khong ket noi duoc Chatwoot de tao tai khoan.' });
   }
-});
+}
+
+app.post('/app/sign-up', handleStaffSignup);
+app.post('/api/staff-signup', handleStaffSignup);
 
 // Middleware xác thực cho Admin (Đồng bộ Chatwoot) - Xử lý qua JS Frontend
 const authCache = new Map();
