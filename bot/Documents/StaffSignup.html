@@ -285,6 +285,16 @@
       message.className = `message show ${ok ? 'ok' : 'err'}`;
     }
 
+    function getErrorMessage(value) {
+      if (!value) return '';
+      if (typeof value === 'string') return value;
+      if (Array.isArray(value)) return value.map(getErrorMessage).filter(Boolean).join(', ');
+      if (typeof value === 'object') {
+        return Object.values(value).map(getErrorMessage).filter(Boolean).join(', ');
+      }
+      return String(value);
+    }
+
     form.addEventListener('submit', async event => {
       event.preventDefault();
       const payload = {
@@ -313,7 +323,7 @@
           body: JSON.stringify(payload),
         });
         const json = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(json.error || 'Chưa tạo được tài khoản.');
+        if (!res.ok) throw new Error(getErrorMessage(json.error) || 'Chưa tạo được tài khoản.');
 
         form.reset();
         setMessage('Đã tạo tài khoản. Vui lòng liên hệ admin để được thêm vào account bệnh viện và gán quyền.', true);
