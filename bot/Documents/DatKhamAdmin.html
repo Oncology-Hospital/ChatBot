@@ -7,17 +7,20 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f4f7fb;
+      --bg: #eef4f8;
       --panel: #ffffff;
-      --line: #d9e1ee;
-      --line-soft: #e8edf5;
-      --text: #172033;
-      --muted: #667085;
-      --blue: #1267d8;
+      --panel-soft: #f7fafc;
+      --line: #d7e1ea;
+      --line-soft: #edf2f6;
+      --text: #142033;
+      --muted: #65758a;
+      --blue: #1769d8;
+      --blue-dark: #0f4fa8;
+      --teal: #0f766e;
       --green: #087443;
       --amber: #a15c07;
       --red: #b42318;
-      --slate: #475467;
+      --shadow: 0 16px 38px rgba(31, 48, 70, 0.12);
     }
 
     * { box-sizing: border-box; }
@@ -25,180 +28,420 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: var(--bg);
+      background:
+        linear-gradient(180deg, #e8f1f7 0, #f6f8fb 280px),
+        var(--bg);
       color: var(--text);
     }
 
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      min-height: 38px;
+      border: 0;
+      border-radius: 7px;
+      padding: 9px 13px;
+      cursor: pointer;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    button:hover { background: var(--blue-dark); }
+    button:disabled { cursor: not-allowed; opacity: 0.55; }
+
+    button.secondary {
+      background: #ffffff;
+      color: #24364d;
+      border: 1px solid #cbd7e3;
+    }
+
+    button.secondary:hover { background: #f2f6fa; }
+    button.danger { background: var(--red); }
+    button.danger:hover { background: #941b13; }
+    button.ghost { background: transparent; color: #31516e; border: 1px solid transparent; }
+    button.ghost:hover { background: #edf4f8; }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid #cbd7e3;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--text);
+      padding: 10px 11px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #5d9cec;
+      box-shadow: 0 0 0 3px rgba(23, 105, 216, 0.14);
+    }
+
+    textarea {
+      min-height: 108px;
+      resize: vertical;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.15), rgba(23, 105, 216, 0.14)),
+        #edf5f7;
+    }
+
+    .login-screen.show { display: flex; }
+
+    .login-shell {
+      width: min(920px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .login-brand {
+      min-height: 440px;
+      padding: 32px;
+      background:
+        linear-gradient(180deg, rgba(20, 32, 51, 0.35), rgba(20, 32, 51, 0.66)),
+        url("/assets/background/background.jpg") center/cover;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+    }
+
+    .brand-row img {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #fff;
+    }
+
+    .login-brand h1 {
+      margin: 0 0 12px;
+      max-width: 360px;
+      font-size: 30px;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .login-brand p {
+      margin: 0;
+      max-width: 420px;
+      color: rgba(255,255,255,0.86);
+      line-height: 1.55;
+    }
+
+    .login-panel {
+      padding: 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-panel h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .login-panel .hint {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #31516e;
+    }
+
+    .login-error {
+      display: none;
+      margin: 4px 0 16px;
+      padding: 10px 12px;
+      border-radius: 7px;
+      background: #fff0f0;
+      border: 1px solid #ffd0d0;
+      color: #9b1c1c;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .login-error.show { display: block; }
+
+    .app-shell {
+      min-height: 100vh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      min-height: 64px;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .app-brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--line);
+    }
+
+    .app-brand strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.2;
+    }
+
+    .app-brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .account {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #dff6f2;
+      color: var(--teal);
+      font-weight: 800;
+      border: 1px solid #bfe8e1;
+      flex: 0 0 auto;
+    }
+
+    .account-meta {
+      min-width: 0;
+      text-align: right;
+    }
+
+    .account-meta span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.2;
+    }
+
+    .account-meta strong {
+      display: block;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
     main {
-      max-width: 1220px;
+      max-width: 1360px;
       margin: 0 auto;
       padding: 28px 24px 48px;
     }
 
-    header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 16px;
+    .page-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 18px;
       margin-bottom: 18px;
     }
 
-    h1 {
-      font-size: 26px;
+    .page-head h1 {
+      margin: 0 0 7px;
+      font-size: 28px;
       line-height: 1.15;
-      margin: 0 0 6px;
+      letter-spacing: 0;
     }
 
     .subtitle {
       margin: 0;
       color: var(--muted);
-      font-size: 14px;
+      line-height: 1.45;
     }
 
     .toolbar {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
       justify-content: flex-end;
+      gap: 9px;
     }
 
-    select, button, textarea {
-      border: 1px solid #c8d0df;
-      border-radius: 6px;
-      padding: 9px 11px;
-      font-size: 14px;
+    .toolbar select {
+      min-width: 154px;
     }
 
-    select {
-      min-width: 142px;
-      background: #fff;
-    }
-
-    button {
-      min-height: 38px;
-      cursor: pointer;
-      background: var(--blue);
-      color: #fff;
-      border: 0;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    button.secondary {
-      background: #eef2f8;
-      color: #1e293b;
-      border: 1px solid #c8d0df;
-    }
-
-    button.danger { background: var(--red); }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.55;
-    }
-
-    .toast-wrap {
-      position: fixed;
-      right: 18px;
-      top: 18px;
-      z-index: 20;
+    .summary-grid {
       display: grid;
-      gap: 10px;
-      width: min(360px, calc(100vw - 36px));
-      pointer-events: none;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
-    .toast {
-      pointer-events: auto;
-      border: 1px solid transparent;
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
       border-radius: 8px;
-      box-shadow: 0 12px 30px rgba(16, 24, 40, 0.14);
-      padding: 12px 14px;
-      background: #fff;
-      animation: toast-in 160ms ease-out;
+      padding: 14px;
+      min-height: 86px;
+      box-shadow: 0 1px 2px rgba(31, 48, 70, 0.04);
     }
 
-    .toast.ok {
-      background: #eaf7ef;
-      border-color: #bee7cf;
-      color: #0b6b3f;
-    }
-
-    .toast.err {
-      background: #fff0f0;
-      border-color: #ffd0d0;
-      color: #9b1c1c;
-    }
-
-    .toast-title {
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
       font-weight: 700;
-      font-size: 14px;
-      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
-    .toast-body {
+    .metric strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .table-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(31, 48, 70, 0.07);
+      overflow: hidden;
+    }
+
+    .table-head {
+      min-height: 52px;
+      padding: 13px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--panel-soft);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .table-head strong {
+      font-size: 15px;
+    }
+
+    .table-head span {
+      color: var(--muted);
       font-size: 13px;
-      line-height: 1.4;
-    }
-
-    @keyframes toast-in {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .table-wrap {
       overflow-x: auto;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1120px;
+      min-width: 1140px;
     }
 
     th, td {
       border-bottom: 1px solid var(--line-soft);
-      padding: 12px 10px;
+      padding: 13px 12px;
       text-align: left;
       vertical-align: top;
       font-size: 13px;
     }
 
     th {
-      background: #f8fafc;
-      color: #465367;
-      font-weight: 700;
+      background: #fbfdff;
+      color: #496075;
+      font-weight: 800;
       position: sticky;
-      top: 0;
+      top: 64px;
       z-index: 1;
     }
 
     tr:last-child td { border-bottom: 0; }
     tbody tr:hover { background: #fbfdff; }
 
-    .id-col { width: 56px; }
-    .status-col { width: 132px; }
-    .patient-col { width: 250px; }
-    .service-col { width: 220px; }
-    .schedule-col { width: 180px; }
-    .result-col { width: 260px; }
-    .actions-col { width: 150px; }
+    .id-col { width: 68px; }
+    .status-col { width: 144px; }
+    .patient-col { width: 260px; }
+    .service-col { width: 230px; }
+    .schedule-col { width: 190px; }
+    .result-col { width: 250px; }
+    .actions-col { width: 170px; }
 
     .patient-name,
     .service-name {
       display: block;
-      font-weight: 700;
-      margin-bottom: 4px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: #10213a;
     }
 
     .line {
-      margin: 2px 0;
-      color: #1f2a3d;
+      margin: 3px 0;
+      color: #25364b;
+      line-height: 1.35;
     }
 
     .small {
@@ -219,8 +462,8 @@
       display: inline-flex;
       align-items: center;
       border-radius: 999px;
-      padding: 4px 9px;
-      font-weight: 700;
+      padding: 5px 9px;
+      font-weight: 800;
       font-size: 12px;
       line-height: 1;
     }
@@ -231,15 +474,17 @@
     .status-rejected { background: #fff0f0; color: var(--red); }
 
     .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+      align-items: stretch;
+      max-width: 118px;
     }
 
     .actions button {
-      min-width: 76px;
-      padding: 9px 10px;
+      width: 100%;
+      min-height: 36px;
+      padding: 8px 10px;
     }
 
     .final-state {
@@ -250,63 +495,312 @@
     }
 
     .empty {
-      padding: 28px 16px;
+      padding: 34px 16px;
       text-align: center;
       color: var(--muted);
     }
 
-    @media (max-width: 760px) {
-      main { padding: 20px 12px 36px; }
-      header { align-items: stretch; flex-direction: column; }
+    .toast-wrap {
+      position: fixed;
+      right: 18px;
+      top: 82px;
+      z-index: 30;
+      display: grid;
+      gap: 10px;
+      width: min(380px, calc(100vw - 36px));
+      pointer-events: none;
+    }
+
+    .toast {
+      pointer-events: auto;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 12px 14px;
+      background: #fff;
+      animation: toast-in 160ms ease-out;
+    }
+
+    .toast.ok { background: #eaf7ef; border-color: #bee7cf; color: #0b6b3f; }
+    .toast.err { background: #fff0f0; border-color: #ffd0d0; color: #9b1c1c; }
+
+    .toast-title {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .toast-body {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(20, 32, 51, 0.46);
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      width: min(480px, 100%);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .modal-head p {
+      margin: 7px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .modal-body {
+      padding: 18px 20px;
+    }
+
+    .modal-actions {
+      padding: 14px 20px 18px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 920px) {
+      .login-shell { grid-template-columns: 1fr; }
+      .login-brand { min-height: 250px; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+      .page-head { grid-template-columns: 1fr; align-items: stretch; }
       .toolbar { justify-content: flex-start; }
-      select, button { width: 100%; }
+    }
+
+    @media (max-width: 640px) {
+      .login-screen { padding: 12px; }
+      .login-brand { display: none; }
+      .login-panel { padding: 26px 20px; }
+      .topbar-inner { padding: 10px 14px; align-items: flex-start; }
+      .app-brand span, .account-meta span { display: none; }
+      .account-meta strong { max-width: 130px; }
+      main { padding: 20px 12px 34px; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .toolbar { display: grid; grid-template-columns: 1fr; }
+      .modal-actions { display: grid; grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <div>
-        <h1>Duyệt đặt lịch khám</h1>
-        <p class="subtitle">Xem yêu cầu từ chatbot, kiểm tra lịch cho bệnh nhân đã có mã y tế và duyệt để gửi sang Youmed.</p>
-      </div>
-      <div class="toolbar">
-        <select id="status" aria-label="Lọc trạng thái">
-          <option value="pending">Chờ duyệt</option>
-          <option value="submitted">Đã đặt</option>
-          <option value="failed">Lỗi</option>
-          <option value="rejected">Đã từ chối</option>
-          <option value="">Tất cả</option>
-        </select>
-        <button id="reload" class="secondary">Tải lại</button>
-      </div>
-    </header>
+  <div class="login-screen" id="loginScreen">
+    <div class="login-shell">
+      <section class="login-brand" aria-label="Bệnh viện">
+        <div class="brand-row">
+          <img src="/assets/logo/logo.jpg" alt="">
+          <span>Bệnh viện Ung Bướu</span>
+        </div>
+        <div>
+          <h1>Duyệt lịch khám trong một màn hình riêng</h1>
+          <p>Đăng nhập bằng tài khoản Chatwoot để kiểm tra, duyệt hoặc từ chối các yêu cầu đặt lịch từ chatbot.</p>
+        </div>
+      </section>
 
-    <div id="toast-root" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th class="id-col">ID</th>
-            <th class="status-col">Trạng thái</th>
-            <th class="patient-col">Bệnh nhân</th>
-            <th class="service-col">Dịch vụ</th>
-            <th class="schedule-col">Lịch</th>
-            <th class="result-col">Kết quả</th>
-            <th class="actions-col">Thao tác</th>
-          </tr>
-        </thead>
-        <tbody id="rows">
-          <tr><td colspan="7" class="empty">Đang tải...</td></tr>
-        </tbody>
-      </table>
+      <section class="login-panel">
+        <h2>Đăng nhập quản trị</h2>
+        <p class="hint">Sử dụng email và mật khẩu Chatwoot của bạn.</p>
+        <form id="loginForm">
+          <div class="field">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" autocomplete="username" placeholder="ten@benhvien.vn" required>
+          </div>
+          <div class="field">
+            <label for="loginPass">Mật khẩu</label>
+            <input id="loginPass" type="password" autocomplete="current-password" required>
+          </div>
+          <div class="login-error" id="loginError">Sai tài khoản hoặc mật khẩu.</div>
+          <button id="loginButton" type="submit" style="width:100%">Đăng nhập</button>
+        </form>
+      </section>
     </div>
-  </main>
+  </div>
+
+  <div class="app-shell" id="appShell">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="app-brand">
+          <img src="/assets/logo/logo.jpg" alt="">
+          <div>
+            <strong>Quản trị đặt lịch khám</strong>
+            <span>Chatbot BVUB</span>
+          </div>
+        </div>
+        <div class="account">
+          <div class="account-meta">
+            <span>Đang đăng nhập</span>
+            <strong id="currentUser">Chưa xác định</strong>
+          </div>
+          <div class="avatar" id="currentAvatar">A</div>
+          <button id="logout" class="ghost" type="button">Đăng xuất</button>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="page-head">
+        <div>
+          <h1>Duyệt đặt lịch khám</h1>
+          <p class="subtitle">Xem yêu cầu từ chatbot, kiểm tra lịch cho bệnh nhân đã có mã y tế và duyệt để gửi sang Youmed.</p>
+        </div>
+        <div class="toolbar">
+          <select id="status" aria-label="Lọc trạng thái">
+            <option value="pending">Chờ duyệt</option>
+            <option value="submitted">Đã đặt</option>
+            <option value="failed">Lỗi</option>
+            <option value="rejected">Đã từ chối</option>
+            <option value="">Tất cả</option>
+          </select>
+          <button id="reload" class="secondary" type="button">Tải lại</button>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="Tổng quan">
+        <div class="metric"><span>Chờ duyệt</span><strong id="countPending">0</strong></div>
+        <div class="metric"><span>Đã đặt</span><strong id="countSubmitted">0</strong></div>
+        <div class="metric"><span>Lỗi</span><strong id="countFailed">0</strong></div>
+        <div class="metric"><span>Từ chối</span><strong id="countRejected">0</strong></div>
+      </section>
+
+      <section class="table-panel">
+        <div class="table-head">
+          <strong>Danh sách yêu cầu</strong>
+          <span id="listMeta">Đang tải...</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="id-col">ID</th>
+                <th class="status-col">Trạng thái</th>
+                <th class="patient-col">Bệnh nhân</th>
+                <th class="service-col">Dịch vụ</th>
+                <th class="schedule-col">Lịch</th>
+                <th class="result-col">Kết quả</th>
+                <th class="actions-col">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr><td colspan="7" class="empty">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast-root" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="modal-backdrop" id="actionModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <h2 id="modalTitle">Xác nhận thao tác</h2>
+        <p id="modalText"></p>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions">
+        <button class="secondary" id="modalCancel" type="button">Hủy</button>
+        <button id="modalConfirm" type="button">Xác nhận</button>
+      </div>
+    </div>
+  </div>
 
   <script>
+    const AUTH_KEY = 'datKhamAdminAuth';
+    const USER_KEY = 'datKhamAdminUser';
+    let currentModal = null;
+
     function fmtDate(value) {
       if (!value) return '';
       return String(value).slice(0, 10);
+    }
+
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[ch]));
+    }
+
+    function encodeBasic(value) {
+      const bytes = new TextEncoder().encode(value);
+      let binary = '';
+      bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+      return btoa(binary);
+    }
+
+    function getAuthToken() {
+      return localStorage.getItem(AUTH_KEY) || '';
+    }
+
+    function getStoredUser() {
+      return localStorage.getItem(USER_KEY) || '';
+    }
+
+    function setStoredSession(token, user) {
+      localStorage.setItem(AUTH_KEY, token);
+      localStorage.setItem(USER_KEY, user);
+      setCurrentUser(user);
+    }
+
+    function clearStoredSession() {
+      localStorage.removeItem(AUTH_KEY);
+      localStorage.removeItem(USER_KEY);
+      setCurrentUser('');
+    }
+
+    function setCurrentUser(user) {
+      const label = user || 'Chưa đăng nhập';
+      document.getElementById('currentUser').textContent = label;
+      document.getElementById('currentAvatar').textContent = (label.trim()[0] || 'A').toUpperCase();
+    }
+
+    function showLogin(show) {
+      document.getElementById('loginScreen').classList.toggle('show', show);
+      if (show) {
+        document.getElementById('loginPass').value = '';
+        window.setTimeout(() => document.getElementById('loginEmail').focus(), 40);
+      }
+    }
+
+    function setLoginError(message) {
+      const el = document.getElementById('loginError');
+      el.textContent = message || 'Sai tài khoản hoặc mật khẩu.';
+      el.classList.add('show');
+    }
+
+    function clearLoginError() {
+      document.getElementById('loginError').classList.remove('show');
     }
 
     function showToast(title, body, ok = true) {
@@ -327,10 +821,24 @@
       console.groupEnd();
     }
 
-    function esc(value) {
-      return String(value ?? '').replace(/[&<>"']/g, ch => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
-      }[ch]));
+    async function api(url, options = {}, tokenOverride) {
+      const headers = {
+        'X-Requested-With': 'DatKhamAdmin',
+        Accept: 'application/json',
+        ...(options.headers || {})
+      };
+      const token = tokenOverride || getAuthToken();
+      if (token) headers.Authorization = `Basic ${token}`;
+
+      const res = await fetch(url, { ...options, headers });
+      const json = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        clearStoredSession();
+        showLogin(true);
+        throw new Error(json.error || 'Phiên đăng nhập đã hết hạn.');
+      }
+      if (!res.ok) throw new Error(json.error || JSON.stringify(json));
+      return json;
     }
 
     function statusLabel(status) {
@@ -360,13 +868,6 @@
       }
     }
 
-    async function api(url, options) {
-      const res = await fetch(url, options);
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error || JSON.stringify(json));
-      return json;
-    }
-
     function resultHtml(row) {
       if (row.MaDatCho) {
         return [
@@ -393,15 +894,15 @@
 
     function actionHtml(row) {
       if (row.Status !== 'pending') {
-        return `<span class="final-state">Yêu cầu đã ở trạng thái "${esc(statusLabel(row.Status))}". Không còn thao tác.</span>`;
+        return `<span class="final-state">Yêu cầu đang ở trạng thái "${esc(statusLabel(row.Status))}".</span>`;
       }
 
       const hasMayTe = Boolean(row.MayTe);
       return `
         <div class="actions">
-          <button class="secondary" onclick="check(${row.Id})" ${hasMayTe ? '' : 'disabled title="Bệnh nhân mới cần bấm Duyệt để tạo hồ sơ trước"'}>Kiểm tra</button>
-          <button onclick="approve(${row.Id})">Duyệt</button>
-          <button class="danger" onclick="reject(${row.Id})">Từ chối</button>
+          <button class="secondary" data-action="check" data-id="${row.Id}" ${hasMayTe ? '' : 'disabled title="Bệnh nhân mới cần bấm Duyệt để tạo hồ sơ trước"'}>Kiểm tra</button>
+          <button data-action="approve" data-id="${row.Id}">Duyệt</button>
+          <button class="danger" data-action="reject" data-id="${row.Id}">Từ chối</button>
         </div>
       `;
     }
@@ -436,16 +937,35 @@
       </tr>`;
     }
 
-    async function loadRows() {
-      const status = document.getElementById('status').value;
-      const json = await api(`/api/admin/appointments?status=${encodeURIComponent(status)}`);
-      const rows = document.getElementById('rows');
-      rows.innerHTML = json.appointments.length
-        ? json.appointments.map(rowHtml).join('')
-        : '<tr><td colspan="7" class="empty">Không có yêu cầu phù hợp.</td></tr>';
+    function updateSummary(allRows) {
+      const counts = allRows.reduce((acc, row) => {
+        acc[row.Status] = (acc[row.Status] || 0) + 1;
+        return acc;
+      }, {});
+      document.getElementById('countPending').textContent = counts.pending || 0;
+      document.getElementById('countSubmitted').textContent = counts.submitted || 0;
+      document.getElementById('countFailed').textContent = counts.failed || 0;
+      document.getElementById('countRejected').textContent = counts.rejected || 0;
     }
 
-    async function check(id) {
+    async function loadRows() {
+      const status = document.getElementById('status').value;
+      const rowsEl = document.getElementById('rows');
+      rowsEl.innerHTML = '<tr><td colspan="7" class="empty">Đang tải...</td></tr>';
+      document.getElementById('listMeta').textContent = 'Đang tải...';
+
+      const filteredUrl = `/api/admin/appointments?status=${encodeURIComponent(status)}`;
+      const filtered = await api(filteredUrl);
+      const all = status === '' ? filtered : await api('/api/admin/appointments?status=');
+      const rows = filtered.appointments || [];
+      updateSummary(all.appointments || rows);
+      rowsEl.innerHTML = rows.length
+        ? rows.map(rowHtml).join('')
+        : '<tr><td colspan="7" class="empty">Không có yêu cầu phù hợp.</td></tr>';
+      document.getElementById('listMeta').textContent = `${rows.length} yêu cầu`;
+    }
+
+    async function checkAppointment(id) {
       try {
         const json = await api(`/api/admin/appointments/${id}/check`, { method: 'POST' });
         logAction(`Check appointment #${id}`, json);
@@ -457,43 +977,148 @@
       }
     }
 
-    async function approve(id) {
-      if (!confirm(`Duyệt và gửi đặt khám #${id} sang Youmed?`)) return;
+    function openActionModal(type, id) {
+      currentModal = { type, id };
+      const modal = document.getElementById('actionModal');
+      const title = document.getElementById('modalTitle');
+      const text = document.getElementById('modalText');
+      const body = document.getElementById('modalBody');
+      const confirm = document.getElementById('modalConfirm');
+
+      if (type === 'approve') {
+        title.textContent = `Duyệt lịch #${id}`;
+        text.textContent = 'Yêu cầu sẽ được kiểm tra lại và gửi sang Youmed.';
+        body.innerHTML = '';
+        confirm.textContent = 'Duyệt';
+        confirm.className = '';
+      } else {
+        title.textContent = `Từ chối lịch #${id}`;
+        text.textContent = 'Ghi chú này chỉ lưu trong hệ thống quản trị.';
+        body.innerHTML = `
+          <div class="field" style="margin-bottom:0">
+            <label for="rejectNote">Lý do từ chối</label>
+            <textarea id="rejectNote" placeholder="Nhập lý do nếu cần"></textarea>
+          </div>
+        `;
+        confirm.textContent = 'Từ chối';
+        confirm.className = 'danger';
+      }
+
+      modal.classList.add('show');
+    }
+
+    function closeActionModal() {
+      currentModal = null;
+      document.getElementById('actionModal').classList.remove('show');
+    }
+
+    async function confirmAction() {
+      if (!currentModal) return;
+      const { type, id } = currentModal;
+      const confirm = document.getElementById('modalConfirm');
+      confirm.disabled = true;
+
       try {
-        const json = await api(`/api/admin/appointments/${id}/approve`, { method: 'POST' });
-        logAction(`Approve appointment #${id}`, json);
-        showToast(`Đã duyệt #${id}`, 'Lịch đã được gửi sang Youmed. Chi tiết JSON đã được ghi trong Console.', true);
+        if (type === 'approve') {
+          const json = await api(`/api/admin/appointments/${id}/approve`, { method: 'POST' });
+          logAction(`Approve appointment #${id}`, json);
+          showToast(`Đã duyệt #${id}`, 'Lịch đã được gửi sang Youmed.', true);
+        } else {
+          const noteEl = document.getElementById('rejectNote');
+          const json = await api(`/api/admin/appointments/${id}/reject`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ note: noteEl ? noteEl.value.trim() : '' })
+          });
+          logAction(`Reject appointment #${id}`, json);
+          showToast(`Đã từ chối #${id}`, '', true);
+        }
+        closeActionModal();
         await loadRows();
       } catch (err) {
-        console.error(`Approve appointment #${id} failed`, err);
-        showToast(`Duyệt #${id} thất bại`, err.message, false);
-        await loadRows();
+        console.error(`${type} appointment #${id} failed`, err);
+        showToast(`${type === 'approve' ? 'Duyệt' : 'Từ chối'} #${id} thất bại`, err.message, false);
+        await loadRows().catch(() => {});
+      } finally {
+        confirm.disabled = false;
       }
     }
 
-    async function reject(id) {
-      const note = prompt('Lý do từ chối:', '');
-      if (note === null) return;
+    async function doLogin(event) {
+      event.preventDefault();
+      clearLoginError();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPass').value;
+      const button = document.getElementById('loginButton');
+      if (!email || !password) return;
+
+      const token = encodeBasic(`${email}:${password}`);
+      button.disabled = true;
+      button.textContent = 'Đang đăng nhập...';
+
       try {
-        const json = await api(`/api/admin/appointments/${id}/reject`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ note })
-        });
-        logAction(`Reject appointment #${id}`, json);
-        showToast(`Đã từ chối #${id}`, '', true);
+        const me = await api('/api/admin/me', {}, token);
+        setStoredSession(token, (me.user && me.user.email) || email);
+        showLogin(false);
         await loadRows();
       } catch (err) {
-        console.error(`Reject appointment #${id} failed`, err);
-        showToast(`Từ chối #${id} thất bại`, err.message, false);
+        clearStoredSession();
+        setLoginError(err.message || 'Sai tài khoản hoặc mật khẩu.');
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Đăng nhập';
       }
     }
 
-    document.getElementById('reload').addEventListener('click', loadRows);
-    document.getElementById('status').addEventListener('change', loadRows);
-    loadRows().catch(err => {
-      console.error('Load appointments failed', err);
-      showToast('Không tải được danh sách', err.message, false);
+    async function boot() {
+      const user = getStoredUser();
+      setCurrentUser(user);
+      if (!getAuthToken()) {
+        showLogin(true);
+        return;
+      }
+
+      try {
+        const me = await api('/api/admin/me');
+        setCurrentUser((me.user && me.user.email) || user);
+        await loadRows();
+      } catch (err) {
+        showLogin(true);
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', doLogin);
+    document.getElementById('reload').addEventListener('click', () => {
+      loadRows().catch(err => showToast('Không tải được danh sách', err.message, false));
+    });
+    document.getElementById('status').addEventListener('change', () => {
+      loadRows().catch(err => showToast('Không tải được danh sách', err.message, false));
+    });
+    document.getElementById('logout').addEventListener('click', () => {
+      clearStoredSession();
+      document.getElementById('rows').innerHTML = '<tr><td colspan="7" class="empty">Vui lòng đăng nhập.</td></tr>';
+      document.getElementById('listMeta').textContent = 'Chưa đăng nhập';
+      updateSummary([]);
+      showLogin(true);
+    });
+    document.getElementById('rows').addEventListener('click', event => {
+      const button = event.target.closest('button[data-action]');
+      if (!button || button.disabled) return;
+      const id = button.dataset.id;
+      const action = button.dataset.action;
+      if (action === 'check') checkAppointment(id);
+      if (action === 'approve' || action === 'reject') openActionModal(action, id);
+    });
+    document.getElementById('modalCancel').addEventListener('click', closeActionModal);
+    document.getElementById('modalConfirm').addEventListener('click', confirmAction);
+    document.getElementById('actionModal').addEventListener('click', event => {
+      if (event.target.id === 'actionModal') closeActionModal();
+    });
+
+    boot().catch(err => {
+      console.error('Boot failed', err);
+      showToast('Không tải được trang quản trị', err.message, false);
+      showLogin(true);
     });
   </script>
 </body>
