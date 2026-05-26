@@ -10,7 +10,31 @@ const { startAppointmentFlow, handleAppointmentMessage } = require('./appointmen
 
 // ─── Config ───
 const PORT = 4000;
-const CHATWOOT_URL = process.env.CHATWOOT_URL || (process.env.NODE_ENV === 'production' ? 'https://adminchatbot.dienisme.online' : 'http://localhost:3000');
+function cleanBaseUrl(value) {
+  return String(value || '').trim().replace(/\/+$/, '');
+}
+
+function uniqueUrls(urls) {
+  return [...new Set(urls.map(cleanBaseUrl).filter(Boolean))];
+}
+
+const DEFAULT_CHATWOOT_URL = process.env.NODE_ENV === 'production'
+  ? 'https://adminchatbot.dienisme.online'
+  : 'http://localhost:3000';
+const CHATWOOT_URL = cleanBaseUrl(
+  process.env.CHATWOOT_API_URL
+  || process.env.CHATWOOT_URL
+  || process.env.FRONTEND_URL
+  || DEFAULT_CHATWOOT_URL
+);
+const CHATWOOT_AUTH_URLS = uniqueUrls([
+  process.env.CHATWOOT_AUTH_URL,
+  process.env.CHATWOOT_URL,
+  process.env.CHATWOOT_API_URL,
+  process.env.FRONTEND_URL,
+  process.env.NODE_ENV === 'production' ? null : 'http://localhost:3000',
+  DEFAULT_CHATWOOT_URL,
+]);
 const CHATWOOT_API_TOKEN = process.env.CHATWOOT_API_TOKEN || 'S4XGRoN3JBvc2aS9nofJKMWX';
 const ACCOUNT_ID = process.env.CHATWOOT_ACCOUNT_ID || 1;
 const CONFIDENCE_HIGH = 0.5;   // auto-answer (Cosine Similarity)
@@ -31,14 +55,60 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'test-page.html')))
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 // Middleware xác thực cho Admin (Đồng bộ Chatwoot) - Xử lý qua JS Frontend
-const authCache = new Set();
+const authCache = new Map();
+
+async function verifyChatwootLogin(email, password) {
+  let lastError = null;
+
+  for (const baseUrl of CHATWOOT_AUTH_URLS) {
+    try {
+      const chatwootRes = await axios.post(
+        `${baseUrl}/auth/sign_in`,
+        { email, password },
+        {
+          timeout: 10000,
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          validateStatus: status => status < 500,
+        }
+      );
+
+      const hasAuthToken = Boolean(chatwootRes.headers['access-token'] || chatwootRes.headers.client || chatwootRes.headers.uid);
+      if (chatwootRes.status === 200 && hasAuthToken) {
+        return baseUrl;
+      }
+
+      lastError = new Error(`Chatwoot auth ${baseUrl} returned ${chatwootRes.status} without auth token`);
+      console.warn(lastError.message);
+    } catch (err) {
+      lastError = err;
+      console.warn(`Chatwoot auth ${baseUrl} failed: ${err.message}`);
+    }
+  }
+
+  throw lastError || new Error('No Chatwoot auth URL configured');
+}
+
 const auth = async (req, res, next) => {
   const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
-  const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
+  const authText = Buffer.from(b64auth, 'base64').toString();
+  const separatorIndex = authText.indexOf(':');
+  const login = separatorIndex >= 0 ? authText.slice(0, separatorIndex) : '';
+  const password = separatorIndex >= 0 ? authText.slice(separatorIndex + 1) : '';
+  const isApiRequest = req.originalUrl.startsWith('/api/') || req.get('X-Requested-With') === 'DatKhamAdmin';
+
+  const unauthorized = message => {
+    if (isApiRequest) {
+      return res.status(401).json({ error: message });
+    }
+    res.set('WWW-Authenticate', 'Basic realm="DatKhamAdmin"');
+    return res.status(401).send(message);
+  };
 
   if (!login || !password) {
-    res.set('WWW-Authenticate', 'Basic realm="DatKhamAdmin"');
-    return res.status(401).send('Yeu cau dang nhap.');
+    return unauthorized('Yeu cau dang nhap.');
   }
 
   // Chống bị văng do Chatwoot giới hạn đăng nhập (Rate limit)
@@ -47,17 +117,11 @@ const auth = async (req, res, next) => {
   }
 
   try {
-    const chatwootRes = await axios.post(`${CHATWOOT_URL}/auth/sign_in`, {
-      email: login,
-      password: password
-    });
-    if (chatwootRes.status === 200) {
-      authCache.add(b64auth);
-      return next();
-    }
+    const authUrl = await verifyChatwootLogin(login, password);
+    authCache.set(b64auth, authUrl);
+    return next();
   } catch (err) {
-    res.set('WWW-Authenticate', 'Basic realm="DatKhamAdmin"');
-    return res.status(401).send('Sai tai khoan luon.');
+    return unauthorized('Sai tai khoan hoac mat khau.');
   }
 };
 
@@ -309,6 +373,8 @@ async function saveAndRebuild() {
 // ─── Start ───
 app.listen(PORT, () => {
   console.log(`\n🤖 Bot service running on port ${PORT}`);
+  console.log(`Chatwoot API URL: ${CHATWOOT_URL}`);
+  console.log(`Chatwoot auth URLs: ${CHATWOOT_AUTH_URLS.join(', ')}`);
   console.log(`📚 Loaded ${qaData.length} Q&A entries`);
   console.log(`🔗 Webhook URL: http://host.docker.internal:${PORT}/webhook`);
   console.log(`📋 Q&A API: http://localhost:${PORT}/api/qa\n`);

@@ -288,7 +288,7 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
     `);
   });
 
-  app.get('/DatKhamAdmin', auth, (req, res) => {
+  app.get('/DatKhamAdmin', (req, res) => {
     res.sendFile(path.join(__dirname, 'Documents/DatKhamAdmin.html'));
   });
 
@@ -324,6 +324,10 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
     } catch (err) {
       res.status(err.statusCode || 500).json({ error: err.message, checkResult: err.checkResult });
     }
+  });
+
+  app.get('/api/admin/me', auth, (req, res) => {
+    res.json({ user: { email: adminNameFromRequest(req) } });
   });
 
   app.use('/api/admin/appointments', auth);
