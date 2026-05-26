@@ -54,6 +54,56 @@ app.get('/test-page.html', (req, res) => res.sendFile(path.join(__dirname, 'test
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'test-page.html')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
+app.get(['/dang-ky-tai-khoan', '/DangKyTaiKhoan', '/staff-signup'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'Documents/StaffSignup.html'));
+});
+
+app.post('/api/staff-signup', async (req, res) => {
+  const name = String(req.body.name || '').trim();
+  const email = String(req.body.email || '').trim().toLowerCase();
+  const password = String(req.body.password || '');
+  const passwordConfirmation = String(req.body.password_confirmation || '');
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: 'Vui long nhap day du ho ten, email va mat khau.' });
+  }
+  if (password !== passwordConfirmation) {
+    return res.status(400).json({ error: 'Mat khau nhap lai chua khop.' });
+  }
+
+  try {
+    const chatwootRes = await axios.post(
+      `${CHATWOOT_URL}/auth`,
+      {
+        name,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
+        confirm_success_url: `${cleanBaseUrl(process.env.FRONTEND_URL || CHATWOOT_URL)}/app/login`,
+      },
+      {
+        timeout: 10000,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        validateStatus: status => status < 500,
+      }
+    );
+
+    if (chatwootRes.status >= 200 && chatwootRes.status < 300) {
+      return res.status(201).json({ success: true });
+    }
+
+    const errors = chatwootRes.data && (chatwootRes.data.errors || chatwootRes.data.error || chatwootRes.data.message);
+    const message = Array.isArray(errors) ? errors.join(', ') : errors;
+    return res.status(chatwootRes.status).json({ error: message || 'Chatwoot tu choi tao tai khoan.' });
+  } catch (err) {
+    console.error('Staff signup failed:', err.message);
+    return res.status(502).json({ error: 'Khong ket noi duoc Chatwoot de tao tai khoan.' });
+  }
+});
+
 // Middleware xác thực cho Admin (Đồng bộ Chatwoot) - Xử lý qua JS Frontend
 const authCache = new Map();
 

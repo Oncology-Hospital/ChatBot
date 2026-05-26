@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tạo tài khoản nhân viên</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef4f8;
+      --panel: #ffffff;
+      --line: #d7e1ea;
+      --text: #142033;
+      --muted: #65758a;
+      --blue: #1769d8;
+      --blue-dark: #0f4fa8;
+      --green: #087443;
+      --red: #b42318;
+      --shadow: 0 16px 38px rgba(31, 48, 70, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.16), rgba(23, 105, 216, 0.14)),
+        #edf5f7;
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    button, input { font: inherit; }
+
+    .shell {
+      width: min(940px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      min-height: 460px;
+      padding: 32px;
+      background:
+        linear-gradient(180deg, rgba(20, 32, 51, 0.28), rgba(20, 32, 51, 0.68)),
+        url("https://chatbot.dienisme.online/assets/background/background.jpg") center/cover;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+    }
+
+    .brand-row img {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #fff;
+    }
+
+    .brand h1 {
+      margin: 0 0 12px;
+      max-width: 380px;
+      font-size: 30px;
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .brand p {
+      margin: 0;
+      max-width: 430px;
+      color: rgba(255,255,255,0.86);
+      line-height: 1.55;
+    }
+
+    .panel {
+      padding: 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .panel h2 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .hint {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #31516e;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #cbd7e3;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--text);
+      padding: 10px 11px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #5d9cec;
+      box-shadow: 0 0 0 3px rgba(23, 105, 216, 0.14);
+    }
+
+    .message {
+      display: none;
+      margin: 4px 0 16px;
+      padding: 10px 12px;
+      border-radius: 7px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .message.show { display: block; }
+    .message.ok { background: #eaf7ef; border: 1px solid #bee7cf; color: var(--green); }
+    .message.err { background: #fff0f0; border: 1px solid #ffd0d0; color: #9b1c1c; }
+
+    button {
+      width: 100%;
+      min-height: 40px;
+      border: 0;
+      border-radius: 7px;
+      padding: 10px 13px;
+      cursor: pointer;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    button:hover { background: var(--blue-dark); }
+    button:disabled { cursor: not-allowed; opacity: 0.65; }
+
+    .login-link {
+      margin: 16px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .login-link a {
+      color: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    @media (max-width: 840px) {
+      .shell { grid-template-columns: 1fr; }
+      .brand { min-height: 240px; }
+    }
+
+    @media (max-width: 560px) {
+      body { padding: 12px; }
+      .brand { display: none; }
+      .panel { padding: 26px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="brand" aria-label="Bệnh viện">
+      <div class="brand-row">
+        <img src="https://chatbot.dienisme.online/assets/logo/logo.jpg" alt="">
+        <span>Bệnh viện Ung Bướu</span>
+      </div>
+      <div>
+        <h1>Tạo tài khoản nhân viên</h1>
+        <p>Tài khoản được tạo trước để đăng nhập Chatwoot. Admin sẽ thêm email này vào account bệnh viện và gán quyền sau.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Đăng ký tài khoản</h2>
+      <p class="hint">Nhập đúng email nhân viên. Sau khi tạo xong, liên hệ admin để được thêm vào hệ thống.</p>
+
+      <form id="signupForm">
+        <div class="field">
+          <label for="fullName">Họ tên</label>
+          <input id="fullName" name="fullName" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Mật khẩu</label>
+          <input id="password" name="password" type="password" autocomplete="new-password" minlength="6" required>
+        </div>
+        <div class="field">
+          <label for="confirmPassword">Nhập lại mật khẩu</label>
+          <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required>
+        </div>
+
+        <div class="message" id="message"></div>
+        <button id="submitButton" type="submit">Tạo tài khoản</button>
+      </form>
+
+      <p class="login-link">Đã được cấp quyền? <a href="/app/login" id="loginLink">Đăng nhập Chatwoot</a></p>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('signupForm');
+    const button = document.getElementById('submitButton');
+    const message = document.getElementById('message');
+    const loginLink = document.getElementById('loginLink');
+
+    if (location.hostname === 'chatbot.dienisme.online') {
+      loginLink.href = 'https://adminchatbot.dienisme.online/app/login';
+    }
+
+    function setMessage(text, ok) {
+      message.textContent = text;
+      message.className = `message show ${ok ? 'ok' : 'err'}`;
+    }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const payload = {
+        name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value,
+        password_confirmation: document.getElementById('confirmPassword').value,
+      };
+
+      if (payload.password !== payload.password_confirmation) {
+        setMessage('Mật khẩu nhập lại chưa khớp.', false);
+        return;
+      }
+
+      button.disabled = true;
+      button.textContent = 'Đang tạo...';
+      message.className = 'message';
+
+      try {
+        const res = await fetch('/api/staff-signup', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json.error || 'Chưa tạo được tài khoản.');
+
+        form.reset();
+        setMessage('Đã tạo tài khoản. Vui lòng liên hệ admin để được thêm vào account bệnh viện và gán quyền.', true);
+      } catch (err) {
+        setMessage(err.message || 'Chưa tạo được tài khoản.', false);
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Tạo tài khoản';
+      }
+    });
+  </script>
+</body>
+</html>
