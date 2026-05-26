@@ -334,7 +334,9 @@ function registerAppointmentRoutes(app, { auth, sendMessage }) {
 
   app.get('/api/admin/appointments', async (req, res) => {
     try {
-      res.json({ appointments: await listAppointments(clean(req.query.status || 'pending')) });
+      const hasStatusFilter = Object.prototype.hasOwnProperty.call(req.query, 'status');
+      const status = hasStatusFilter ? clean(req.query.status) : 'pending';
+      res.json({ appointments: await listAppointments(status) });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
