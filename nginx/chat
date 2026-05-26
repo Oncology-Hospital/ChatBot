@@ -1,15 +1,12 @@
 server {
     listen 80;
     server_name adminchatbot.dienisme.online;
-    location = /app/sign-up {
-        proxy_pass http://127.0.0.1:4000/app/sign-up;
+    location ^~ /app/sign-up {
+        proxy_pass http://127.0.0.1:4000;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-    }
-    location = /app/sign-up/ {
-        return 301 /app/sign-up;
     }
     location = /sign-up {
         return 301 /app/sign-up;

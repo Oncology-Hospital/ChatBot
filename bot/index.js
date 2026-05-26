@@ -136,14 +136,18 @@ app.get('/test-page.html', (req, res) => res.sendFile(path.join(__dirname, 'test
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'test-page.html')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.get('/app/sign-up', (req, res) => {
+function renderStaffSignup(req, res) {
   if (hasActiveChatwootSession(req.headers.cookie)) {
     return res.redirect(302, CHATWOOT_DASHBOARD_URL);
   }
 
   res.set('X-Staff-Signup-Page', 'bot');
   res.sendFile(path.join(__dirname, 'Documents/StaffSignup.html'));
-});
+}
+
+app.route('/app/sign-up')
+  .get(renderStaffSignup)
+  .post(handleStaffSignup);
 
 app.get(['/app/sign-up/', '/sign-up', '/dang-ky-tai-khoan', '/DangKyTaiKhoan', '/staff-signup'], (req, res) => {
   res.redirect(301, '/app/sign-up');
@@ -194,7 +198,7 @@ async function handleStaffSignup(req, res) {
   }
 }
 
-app.post('/app/sign-up', handleStaffSignup);
+app.post('/app/sign-up/', handleStaffSignup);
 app.post('/api/staff-signup', handleStaffSignup);
 
 // Middleware xác thực cho Admin (Đồng bộ Chatwoot) - Xử lý qua JS Frontend
