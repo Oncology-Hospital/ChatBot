@@ -55,10 +55,11 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'test-page.html')))
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 app.get('/app/sign-up', (req, res) => {
+  res.set('X-Staff-Signup-Page', 'bot');
   res.sendFile(path.join(__dirname, 'Documents/StaffSignup.html'));
 });
 
-app.get(['/sign-up', '/dang-ky-tai-khoan', '/DangKyTaiKhoan', '/staff-signup'], (req, res) => {
+app.get(['/app/sign-up/', '/sign-up', '/dang-ky-tai-khoan', '/DangKyTaiKhoan', '/staff-signup'], (req, res) => {
   res.redirect(301, '/app/sign-up');
 });
 
